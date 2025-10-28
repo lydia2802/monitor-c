@@ -18,10 +18,21 @@ LATITUDE_RANGE = (-6.0, 6.0)
 LONGITUDE_RANGE = (95.0, 141.0)
 BIRTH_YEAR_RANGE = (1980, 2000)
 
+# Export Settings
+EXPORT_DIR = "exports"
+EXPORT_FORMATS = ["json", "csv", "txt"]
+
+# History Settings
+MAX_HISTORY_ITEMS = 50
+
+# Batch Search Settings
+BATCH_INPUT_FILE = "batch_search.txt"
+MAX_BATCH_SIZE = 100
+
 # Colors
 COLORS = {
     "INFO": "cyan",
     "WARNING": "yellow",
     "ERROR": "red",
     "SUCCESS": "green"
-} 
+}
