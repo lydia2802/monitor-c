@@ -12,12 +12,31 @@ Aplikasi Python untuk melacak nomor telepon dan NIK dari Telkomsel dengan interf
 - 📊 Tampilan hasil yang informatif dan terstruktur
 - ⚡ Performa cepat dan responsif
 
-### Fitur Baru v2.0
+### Fitur v2.0
 1. **📤 Export Hasil Pencarian** - Export hasil ke berbagai format (JSON, CSV, TXT)
 2. **📜 History Pencarian** - Lihat history pencarian yang telah dilakukan
 3. **📦 Pencarian Batch** - Cari multiple nomor sekaligus dari file
 4. **📈 Statistik Dashboard** - Lihat statistik lengkap tentang pencarian
 5. **🔄 Menu Interaktif** - Navigasi yang lebih mudah dengan menu pilihan
+
+### 🆕 15 Fitur Baru v3.0
+1. **🔍 Pencarian Berdasarkan Nama** - Reverse lookup berdasarkan nama
+2. **📍 Pencarian Berdasarkan Lokasi** - Cari nomor berdasarkan kota/provinsi
+3. **🔎 Filter History Advanced** - Filter by tanggal, lokasi, gender
+4. **📊 Statistik Visual** - Chart ASCII untuk visualisasi data
+5. **📱 Deteksi Operator** - Identifikasi Telkomsel, XL, Indosat, dll
+6. **💳 Deteksi Tipe Kartu** - Prabayar atau Pascabayar
+7. **📧 Email Generator** - Generate email dari nama
+8. **🌐 Social Media Profiles** - Instagram, Facebook, Twitter, TikTok
+9. **🎂 Kalkulator Umur** - Hitung umur dari tanggal lahir
+10. **🗺️ Kalkulator Jarak** - Hitung jarak antar koordinat
+11. **⭐ Kelola Favorit** - Simpan pencarian favorit
+12. **🗑️ Hapus History** - Bersihkan history pencarian
+13. **📝 Tambah Catatan** - Notes untuk setiap pencarian
+14. **⚡ Mode Cepat** - Skip animasi untuk pencarian cepat
+15. **📄 Laporan Lengkap** - Generate report profesional
+
+📖 **Lihat dokumentasi lengkap di [NEW_FEATURES.md](NEW_FEATURES.md)**
 
 ## 📋 Persyaratan Sistem
 
@@ -47,12 +66,23 @@ python main.py
 
 2. Masukkan password aktivasi (default: Sobri)
 
-3. Pilih menu yang diinginkan:
+3. Pilih menu yang diinginkan (v3.0):
    - **Menu 1**: Pencarian Tunggal - Cari satu nomor dengan opsi export
    - **Menu 2**: Pencarian Batch - Cari banyak nomor dari file batch_search.txt
-   - **Menu 3**: Lihat History - Tampilkan semua pencarian yang telah dilakukan
-   - **Menu 4**: Lihat Statistik - Tampilkan statistik pencarian
-   - **Menu 5**: Keluar dari program
+   - **Menu 3**: Pencarian Berdasarkan Nama - Reverse lookup
+   - **Menu 4**: Pencarian Berdasarkan Lokasi - Cari by kota/provinsi
+   - **Menu 5**: Lihat History - Tampilkan semua pencarian
+   - **Menu 6**: Filter History (Advanced) - Filter by tanggal/lokasi/gender
+   - **Menu 7**: Lihat Statistik - Statistik pencarian
+   - **Menu 8**: Statistik Visual (Chart) - Visualisasi dengan grafik
+   - **Menu 9**: Kalkulator Jarak - Hitung jarak koordinat
+   - **Menu 10**: Kelola Favorit - Simpan pencarian favorit
+   - **Menu 11**: Hapus History - Bersihkan history
+   - **Menu 12**: Tambah Catatan - Notes untuk pencarian
+   - **Menu 13**: Mode Cepat (Toggle) - Skip animasi
+   - **Menu 14**: Generate Laporan Lengkap - Report profesional
+   - **Menu 15**: Info Operator - Lihat database operator
+   - **Menu 0**: Keluar dari program
 
 ### Pencarian Batch
 
@@ -164,6 +194,26 @@ Created by: Letda Kes dr. Sobri
 Program ini dibuat untuk tujuan edukasi dan demonstrasi. Penggunaan untuk tujuan ilegal adalah tanggung jawab pengguna.
 
 ## 📝 Changelog
+
+### v3.0
+- ✨ Pencarian berdasarkan nama (reverse lookup)
+- ✨ Pencarian berdasarkan lokasi (kota/provinsi)
+- ✨ Filter history advanced (tanggal, lokasi, gender)
+- ✨ Statistik visual dengan chart ASCII
+- ✨ Deteksi operator telepon otomatis
+- ✨ Deteksi tipe kartu (prabayar/pascabayar)
+- ✨ Email generator dari nama
+- ✨ Social media profiles generator (4 platform)
+- ✨ Kalkulator umur otomatis
+- ✨ Kalkulator jarak koordinat (Haversine)
+- ✨ Sistem favorit/bookmark pencarian
+- ✨ Hapus history dengan konfirmasi
+- ✨ Tambah catatan ke pencarian
+- ✨ Mode cepat untuk skip animasi
+- ✨ Generate laporan lengkap profesional
+- ✨ Info operator dengan database lengkap
+- 🎨 Enhanced data output dengan lebih banyak informasi
+- 📚 Dokumentasi lengkap untuk semua fitur
 
 ### v2.0
 - ✨ Fitur export hasil (JSON, CSV, TXT)
