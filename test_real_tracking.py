@@ -198,31 +198,24 @@ def test_database_client():
         print_test(f"Database test failed: {e}", "ERROR")
         return False
 
-def test_lookup_simulation():
-    """Test lookup with simulation mode."""
-    print_test("\nTesting lookup (simulation mode)...", "INFO")
+def test_lookup_no_data():
+    """Test lookup when no data is available."""
+    print_test("\nTesting lookup with no data...", "INFO")
     
     try:
         from utils.api_client import perform_real_lookup
-        from config import api_config
         
-        # Temporarily disable API for simulation test
-        original_api_enabled = api_config.API_ENABLED
-        api_config.API_ENABLED = False
-        
-        result = perform_real_lookup("081234567890")
-        
-        # Restore original setting
-        api_config.API_ENABLED = original_api_enabled
+        # Test with a non-existent number (should return None)
+        result = perform_real_lookup("089999999999")
         
         if result is None:
-            print_test("✓ Simulation mode returns None (expected)", "SUCCESS")
+            print_test("✓ Returns None when no data found (expected)", "SUCCESS")
         else:
-            print_test(f"Unexpected result in simulation: {result}", "WARNING")
+            print_test(f"Found data: {result}", "INFO")
         
         return True
     except Exception as e:
-        print_test(f"Lookup simulation test failed: {e}", "ERROR")
+        print_test(f"Lookup no-data test failed: {e}", "ERROR")
         return False
 
 def test_normalize_response():
@@ -273,7 +266,7 @@ def main():
         ("Rate Limiter", test_rate_limiter),
         ("Cache", test_cache),
         ("Database Client", test_database_client),
-        ("Lookup Simulation", test_lookup_simulation),
+        ("Lookup No Data", test_lookup_no_data),
         ("Response Normalization", test_normalize_response),
     ]
     

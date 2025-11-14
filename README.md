@@ -1,16 +1,22 @@
 # Pegasus Lacak Nomor v3.0 - Real Tracking Edition
 
-Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking** menggunakan API eksternal dan database lokal, atau mode simulasi untuk testing.
+Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking ONLY** menggunakan API eksternal dan database lokal.
 
-## ✨ **NEW: Real Tracking Mode**
+## ⚠️ **IMPORTANT: Simulation Mode Removed**
 
-Aplikasi sekarang mendukung **pelacakan real-time** dengan:
+**Simulation mode has been removed.** Application now operates in **Real Tracking Mode ONLY**.
+
+See [SIMULATION_REMOVED.md](SIMULATION_REMOVED.md) for details.
+
+## ✨ **Real Tracking Features**
+
+Aplikasi mendukung **pelacakan real-time** dengan:
 - 🌐 **API Integration** - Koneksi ke API eksternal untuk data real
 - 💾 **Local Database** - Query data dari SQLite lokal
-- 🔄 **Auto Fallback** - Otomatis fallback ke simulasi jika API gagal
 - 🔐 **Privacy Compliance** - Built-in disclaimer dan consent
 - ⚡ **Rate Limiting** - Proteksi dari API overload
 - 💰 **Caching** - Mengurangi API calls dengan smart caching
+- ❌ **No Simulation** - Data real saja, tidak ada data dummy/fake
 
 📖 **[Baca Panduan Lengkap Real Tracking](REAL_TRACKING_GUIDE.md)**
 
@@ -33,8 +39,8 @@ Aplikasi sekarang mendukung **pelacakan real-time** dengan:
 5. **🔄 Menu Interaktif** - Navigasi yang lebih mudah dengan menu pilihan
 
 ### 🆕 15 Fitur Baru v3.0
-1. **🔍 Pencarian Berdasarkan Nama** - Reverse lookup berdasarkan nama
-2. **📍 Pencarian Berdasarkan Lokasi** - Cari nomor berdasarkan kota/provinsi
+1. **🔍 Pencarian Berdasarkan Nama** - ~~Reverse lookup berdasarkan nama~~ (Disabled - requires API support)
+2. **📍 Pencarian Berdasarkan Lokasi** - ~~Cari nomor berdasarkan kota/provinsi~~ (Disabled - requires API support)
 3. **🔎 Filter History Advanced** - Filter by tanggal, lokasi, gender
 4. **📊 Statistik Visual** - Chart ASCII untuk visualisasi data
 5. **📱 Deteksi Operator** - Identifikasi Telkomsel, XL, Indosat, dll
@@ -128,16 +134,21 @@ File hasil export akan tersimpan di folder `exports/`
 ```
 pegasus-lacak-nomor/
 ├── config/
-│   └── settings.py         # Konfigurasi aplikasi
+│   ├── settings.py           # Konfigurasi aplikasi
+│   ├── api_config.py         # Konfigurasi API (not in git)
+│   └── api_config.example.py # Template konfigurasi
 ├── data/
-│   └── sample_data.py      # Data sampel untuk demonstrasi
+│   ├── local_database.db     # Database lokal (generated)
+│   └── sample_database.json  # Sample data untuk import
 ├── utils/
-│   └── helpers.py          # Fungsi-fungsi pembantu
-├── exports/                # Folder untuk hasil export (auto-created)
-├── main.py                 # File utama program
-├── Pegasus-lacak-nomor.py  # Implementasi legacy
-├── batch_search.txt        # File input untuk batch search
-└── requirements.txt        # Daftar dependencies
+│   ├── helpers.py            # Fungsi-fungsi pembantu
+│   ├── api_client.py         # API & Database client
+│   └── database_manager.py   # Database management
+├── exports/                  # Folder untuk hasil export (auto-created)
+├── main.py                   # File utama program
+├── Pegasus-lacak-nomor.py    # DEPRECATED - shows message only
+├── batch_search.txt          # File input untuk batch search
+└── requirements.txt          # Daftar dependencies
 ```
 
 ## 🔧 Konfigurasi
@@ -183,10 +194,12 @@ Interface menu yang user-friendly:
 
 ## 📝 Catatan Penting
 
-- Program ini hanya untuk tujuan demonstrasi
-- Data yang ditampilkan adalah data dummy
+- **Program memerlukan API atau Database untuk berfungsi**
+- **Simulation mode telah dihapus** - lihat [SIMULATION_REMOVED.md](SIMULATION_REMOVED.md)
+- Data yang ditampilkan adalah data real dari API/Database
 - Jangan gunakan untuk tujuan ilegal
 - Pastikan penggunaan sesuai dengan peraturan yang berlaku
+- User bertanggung jawab penuh atas legalitas penggunaan
 
 ## 🤝 Kontribusi
 
@@ -208,9 +221,15 @@ Program ini dibuat untuk tujuan edukasi dan demonstrasi. Penggunaan untuk tujuan
 
 ## 📝 Changelog
 
-### v3.0
-- ✨ Pencarian berdasarkan nama (reverse lookup)
-- ✨ Pencarian berdasarkan lokasi (kota/provinsi)
+### v3.0 - Simulation Removal Update
+- ⚠️ **BREAKING:** Simulation mode completely removed
+- ⚠️ **BREAKING:** Application requires API or Database to function
+- ❌ Removed: `generate_random_data()`, `simulate_search()`, `sample_data.py`
+- ❌ Removed: `USE_FALLBACK_DATA` configuration option
+- ❌ Disabled: Search by name (requires API support)
+- ❌ Disabled: Search by location (requires API support)
+- ✨ Pencarian berdasarkan nama ~~(disabled)~~
+- ✨ Pencarian berdasarkan lokasi ~~(disabled)~~
 - ✨ Filter history advanced (tanggal, lokasi, gender)
 - ✨ Statistik visual dengan chart ASCII
 - ✨ Deteksi operator telepon otomatis

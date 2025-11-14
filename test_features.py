@@ -34,17 +34,21 @@ except Exception as e:
     print(f"✗ Helper function error: {e}")
     sys.exit(1)
 
-# Test data generation
-print("\nTesting data generation...")
+# Test data normalization
+print("\nTesting data normalization...")
 try:
-    data = generate_random_data()
-    print(f"✓ generate_random_data: {len(data)} fields")
+    test_api_data = {
+        "name": "Test User",
+        "gender": "Laki-laki",
+        "city": "Jakarta"
+    }
+    data = normalize_api_response(test_api_data, "081234567890")
+    print(f"✓ normalize_api_response: {len(data)} fields")
     assert "Nama" in data
-    assert "Jenis Kelamin" in data
     assert "Waktu Pencarian" in data
     print("✓ All required fields present")
 except Exception as e:
-    print(f"✗ Data generation error: {e}")
+    print(f"✗ Data normalization error: {e}")
     sys.exit(1)
 
 # Test export functions

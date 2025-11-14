@@ -78,14 +78,6 @@ CACHE_RESULTS = True
 CACHE_DURATION = 3600  # cache selama 1 jam (3600 seconds)
 
 # ============================================================================
-# FALLBACK & ERROR HANDLING
-# ============================================================================
-
-# Jika API gagal atau tidak ada data
-USE_FALLBACK_DATA = True  # gunakan data simulasi sebagai fallback
-CACHE_RESULTS = True  # cache hasil untuk mengurangi API calls
-
-# ============================================================================
 # PRIVACY & COMPLIANCE
 # ============================================================================
 

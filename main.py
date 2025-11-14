@@ -8,18 +8,13 @@ from config.settings import (
     ACTIVATION_PASSWORD, MAX_PASSWORD_ATTEMPTS,
     PROGRESS_BAR_WIDTH, LOADING_ANIMATION_DURATION,
     LOADING_ANIMATION_ITERATIONS, VALID_PHONE_PREFIX,
-    NIK_LENGTH, LATITUDE_RANGE, LONGITUDE_RANGE,
-    BIRTH_YEAR_RANGE, MAX_HISTORY_ITEMS, BATCH_INPUT_FILE,
+    NIK_LENGTH, MAX_HISTORY_ITEMS, BATCH_INPUT_FILE,
     MAX_BATCH_SIZE, QUICK_SEARCH_MODE, MAX_FAVORITES,
     PHONE_OPERATORS
 )
 from config.api_config import (
-    API_ENABLED, USE_FALLBACK_DATA, REQUIRE_CONSENT,
+    API_ENABLED, REQUIRE_CONSENT,
     DATABASE_ENABLED, ENABLE_OPERATOR_CHECK
-)
-from data.sample_data import (
-    NAMES, STREETS, CITIES, PROVINCES,
-    POSTAL_CODES, GENDERS
 )
 from utils.helpers import (
     clear_screen, print_colored, validate_input,
@@ -42,20 +37,17 @@ quick_mode = QUICK_SEARCH_MODE
 
 def print_banner():
     """Print the application banner."""
-    mode_text = "REAL TRACKING MODE" if API_ENABLED else "SIMULATION MODE"
-    mode_color = Fore.GREEN if API_ENABLED else Fore.YELLOW
-    
     banner = f"""
     {Fore.CYAN}╔════════════════════════════════════════════════════════════════════════════╗
     ║                         PEGASUS LACAK NOMOR v3.0                          ║
     ║                     Created by: Letda Kes dr. Sobri                       ║
-    ║                          15 NEW FEATURES ADDED                            ║
-    ║                     {mode_color}[{mode_text:^19}]{Fore.CYAN}                     ║
+    ║                          REAL TRACKING SYSTEM                             ║
+    ║                     {Fore.GREEN}[API & DATABASE ENABLED]{Fore.CYAN}                      ║
     ╚════════════════════════════════════════════════════════════════════════════╝{Style.RESET_ALL}
     """
     print(banner)
     
-    if REQUIRE_CONSENT and API_ENABLED:
+    if REQUIRE_CONSENT:
         print_consent_disclaimer()
 
 def print_consent_disclaimer():
@@ -110,15 +102,6 @@ def loading_animation():
             sys.stdout.flush()
             time.sleep(LOADING_ANIMATION_DURATION)
     print("\r" + " " * 50 + "\r", end="")
-
-def simulate_search():
-    """Simulate search process with progress bar."""
-    print_colored("\n[INFO] Processing Target Data...", "INFO")
-    loading_animation()
-    for _ in tqdm(range(100), desc="Search Data", 
-                 bar_format="{l_bar}█{bar}█{r_bar}",
-                 colour="cyan", ncols=PROGRESS_BAR_WIDTH):
-        time.sleep(0.03)
 
 def real_search(target):
     """Perform real tracking lookup via API or database."""
@@ -201,37 +184,6 @@ def normalize_api_response(api_data, target):
         normalized['Social Media'] = generate_social_media(normalized['Nama'])
     
     return normalized
-
-def generate_random_data(phone_number=None):
-    """Generate random data for demonstration (fallback)."""
-    name = random.choice(NAMES)
-    birthday = f"{random.randint(*BIRTH_YEAR_RANGE)}-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
-    age = calculate_age(birthday)
-    
-    data = {
-        "Nama": name,
-        "Jenis Kelamin": random.choice(GENDERS),
-        "Birthday": birthday,
-        "Umur": f"{age} tahun" if age else "N/A",
-        "Email": generate_email(name),
-        "Jalan": random.choice(STREETS),
-        "Kota/Town": random.choice(CITIES),
-        "Provinsi": random.choice(PROVINCES),
-        "Kode Pos": random.choice(POSTAL_CODES),
-        "Negara": "Indonesia",
-        "Latitude": f"{random.uniform(*LATITUDE_RANGE):.6f}",
-        "Longitude": f"{random.uniform(*LONGITUDE_RANGE):.6f}",
-        "Waktu Pencarian": format_timestamp(),
-        "Source": "Simulation"
-    }
-    
-    if phone_number and phone_number.startswith('08'):
-        data["Operator"] = detect_operator(phone_number)
-        data["Tipe Kartu"] = random.choice(["Prabayar", "Pascabayar"])
-    
-    data["Social Media"] = generate_social_media(name)
-    
-    return data
 
 def display_result(data):
     """Display search results."""
@@ -345,11 +297,7 @@ def batch_search():
         numbers = numbers[:MAX_BATCH_SIZE]
     
     print_colored(f"\n[INFO] Ditemukan {len(numbers)} nomor untuk dicari.", "INFO")
-    
-    if API_ENABLED:
-        print_colored(f"[INFO] Mode: Real Tracking via API/Database", "SUCCESS")
-    else:
-        print_colored(f"[INFO] Mode: Simulasi", "WARNING")
+    print_colored(f"[INFO] Mode: Real Tracking via API/Database", "SUCCESS")
     
     time.sleep(1)
     
@@ -363,20 +311,13 @@ def batch_search():
         
         result = None
         
-        # Try real tracking
-        if API_ENABLED:
-            api_result = perform_real_lookup(target)
-            if api_result:
-                result = normalize_api_response(api_result, target)
-                result["Source"] = "API/Database"
-            elif USE_FALLBACK_DATA:
-                result = generate_random_data(target)
+        # Perform real tracking
+        api_result = perform_real_lookup(target)
+        if api_result:
+            result = normalize_api_response(api_result, target)
+            result["Source"] = "API/Database"
         else:
-            if not quick_mode:
-                simulate_search()
-            else:
-                time.sleep(0.2)
-            result = generate_random_data(target)
+            print_colored(f"[!] Data tidak ditemukan untuk: {target}", "WARNING")
         
         if result:
             result['Target'] = target
@@ -398,55 +339,16 @@ def batch_search():
             print_colored(f"\n[✓] Semua hasil diexport ke: {filepath}", "SUCCESS")
 
 def search_by_name():
-    """Search by name (reverse lookup)."""
-    name = input(f"\n{Fore.YELLOW}[?] Masukkan nama yang ingin dicari: {Style.RESET_ALL}")
-    
-    if not name:
-        print_colored("\n[!] Nama tidak boleh kosong!", "ERROR")
-        time.sleep(2)
-        return
-    
-    print_colored(f"\n[INFO] Mencari data untuk nama: {name}", "INFO")
-    if not quick_mode:
-        simulate_search()
-    
-    result = generate_random_data()
-    result["Nama"] = name
-    fake_number = f"08{random.randint(10000000, 99999999)}"
-    
-    add_to_history(f"Nama: {name}", result)
-    display_result(result)
-    
-    choice = input(f"\n{Fore.YELLOW}[?] Export hasil? (y/n): {Style.RESET_ALL}")
-    if choice.lower() == 'y':
-        export_result(result, name)
+    """Search by name (reverse lookup) - Requires API/Database support."""
+    print_colored("\n[!] Fitur pencarian berdasarkan nama memerlukan API/Database yang mendukung reverse lookup.", "WARNING")
+    print_colored("[!] Fitur ini telah dinonaktifkan karena memerlukan data real dari API.", "WARNING")
+    time.sleep(3)
 
 def search_by_location():
-    """Search by location (city/province)."""
-    location = input(f"\n{Fore.YELLOW}[?] Masukkan kota atau provinsi: {Style.RESET_ALL}")
-    
-    if not location:
-        print_colored("\n[!] Lokasi tidak boleh kosong!", "ERROR")
-        time.sleep(2)
-        return
-    
-    count = random.randint(3, 8)
-    print_colored(f"\n[INFO] Ditemukan {count} hasil untuk lokasi: {location}", "INFO")
-    time.sleep(1)
-    
-    for i in range(count):
-        if not quick_mode:
-            simulate_search()
-        result = generate_random_data()
-        if location.lower() in [c.lower() for c in CITIES]:
-            result["Kota/Town"] = location
-        else:
-            result["Provinsi"] = location
-        
-        print_colored(f"\n[{i+1}/{count}] {result['Nama']}", "SUCCESS")
-        print_colored(f"    Alamat: {result['Jalan']}, {result['Kota/Town']}", "INFO")
-        print_colored(f"    Telepon: 08{random.randint(10000000, 99999999)}", "INFO")
-        time.sleep(0.3)
+    """Search by location (city/province) - Requires API/Database support."""
+    print_colored("\n[!] Fitur pencarian berdasarkan lokasi memerlukan API/Database yang mendukung location lookup.", "WARNING")
+    print_colored("[!] Fitur ini telah dinonaktifkan karena memerlukan data real dari API.", "WARNING")
+    time.sleep(3)
 
 def advanced_filter_history():
     """Filter history with advanced options."""
@@ -719,7 +621,7 @@ def show_menu():
     print_colored(f"Mode Cepat: {mode_status}", "WARNING")
 
 def single_search():
-    """Perform single search with real tracking or simulation."""
+    """Perform single search with real tracking."""
     target = input(f"\n{Fore.YELLOW}[?] Masukkan Nomor Telepon (08xxx) atau NIK: {Style.RESET_ALL}")
     
     if not validate_input(target, VALID_PHONE_PREFIX, NIK_LENGTH):
@@ -728,31 +630,22 @@ def single_search():
     
     result = None
     
-    # Try real tracking if enabled
-    if API_ENABLED:
-        if not quick_mode:
-            api_result = real_search(target)
-        else:
-            print_colored("\n[INFO] Mode cepat aktif - query langsung", "WARNING")
-            api_result = perform_real_lookup(target)
-        
-        if api_result:
-            result = normalize_api_response(api_result, target)
-            result["Source"] = "API/Database"
-            print_colored("[✓] Data ditemukan dari sumber real!", "SUCCESS")
-        elif USE_FALLBACK_DATA:
-            print_colored("[!] API tidak mengembalikan data, menggunakan simulasi", "WARNING")
-            time.sleep(1)
+    # Perform real tracking
+    if not quick_mode:
+        api_result = real_search(target)
+    else:
+        print_colored("\n[INFO] Mode cepat aktif - query langsung", "WARNING")
+        api_result = perform_real_lookup(target)
     
-    # Fallback to simulation if API disabled or no results
-    if result is None:
-        if not quick_mode:
-            simulate_search()
-        else:
-            print_colored("\n[INFO] Mode cepat aktif - melewati animasi", "WARNING")
-            time.sleep(0.5)
-        
-        result = generate_random_data(target)
+    if api_result:
+        result = normalize_api_response(api_result, target)
+        result["Source"] = "API/Database"
+        print_colored("[✓] Data ditemukan dari sumber real!", "SUCCESS")
+    else:
+        print_colored("\n[!] Data tidak ditemukan. Pastikan API/Database dikonfigurasi dengan benar.", "ERROR")
+        print_colored("[!] Atau nomor/NIK tidak ada dalam database.", "WARNING")
+        time.sleep(3)
+        return
     
     add_to_history(target, result)
     display_result(result)

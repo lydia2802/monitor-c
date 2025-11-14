@@ -15,7 +15,7 @@ from config.api_config import (
     API_ENABLED, API_TIMEOUT, MAX_API_RETRIES,
     API_ENDPOINTS, API_KEYS, DATABASE_ENABLED,
     DATABASE_PATH, RATE_LIMIT_ENABLED, MAX_REQUESTS_PER_MINUTE,
-    REQUEST_DELAY, USE_FALLBACK_DATA, CACHE_RESULTS, CACHE_DURATION
+    REQUEST_DELAY, CACHE_RESULTS, CACHE_DURATION
 )
 
 class RateLimiter:
@@ -398,7 +398,5 @@ def perform_real_lookup(target: str, lookup_type: str = "auto") -> Optional[Dict
     # No results found
     if not result:
         print(f"{Fore.YELLOW}[!] No results from API or database{Style.RESET_ALL}")
-        if USE_FALLBACK_DATA:
-            print(f"{Fore.CYAN}[i] Using fallback simulation data{Style.RESET_ALL}")
     
     return result
