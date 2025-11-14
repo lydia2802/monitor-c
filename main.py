@@ -13,6 +13,10 @@ from config.settings import (
     MAX_BATCH_SIZE, QUICK_SEARCH_MODE, MAX_FAVORITES,
     PHONE_OPERATORS
 )
+from config.api_config import (
+    API_ENABLED, USE_FALLBACK_DATA, REQUIRE_CONSENT,
+    DATABASE_ENABLED, ENABLE_OPERATOR_CHECK
+)
 from data.sample_data import (
     NAMES, STREETS, CITIES, PROVINCES,
     POSTAL_CODES, GENDERS
@@ -26,6 +30,7 @@ from utils.helpers import (
     generate_social_media, draw_ascii_chart, filter_history_by_date,
     filter_history_by_location, filter_history_by_gender, export_to_report
 )
+from utils.api_client import perform_real_lookup, APIClient
 
 # Initialize colorama
 init()
@@ -37,14 +42,46 @@ quick_mode = QUICK_SEARCH_MODE
 
 def print_banner():
     """Print the application banner."""
+    mode_text = "REAL TRACKING MODE" if API_ENABLED else "SIMULATION MODE"
+    mode_color = Fore.GREEN if API_ENABLED else Fore.YELLOW
+    
     banner = f"""
     {Fore.CYAN}╔════════════════════════════════════════════════════════════════════════════╗
     ║                         PEGASUS LACAK NOMOR v3.0                          ║
     ║                     Created by: Letda Kes dr. Sobri                       ║
     ║                          15 NEW FEATURES ADDED                            ║
+    ║                     {mode_color}[{mode_text:^19}]{Fore.CYAN}                     ║
     ╚════════════════════════════════════════════════════════════════════════════╝{Style.RESET_ALL}
     """
     print(banner)
+    
+    if REQUIRE_CONSENT and API_ENABLED:
+        print_consent_disclaimer()
+
+def print_consent_disclaimer():
+    """Print privacy and consent disclaimer."""
+    disclaimer = f"""
+    {Fore.YELLOW}╔════════════════════════════════════════════════════════════════════════════╗
+    ║                            DISCLAIMER & PRIVACY                           ║
+    ╚════════════════════════════════════════════════════════════════════════════╝
+    
+    [!] PENTING - HARAP DIBACA:
+    
+    1. Aplikasi ini menggunakan API eksternal untuk pelacakan real-time
+    2. Pastikan Anda memiliki izin hukum untuk melacak nomor target
+    3. Penyalahgunaan aplikasi ini dapat melanggar hukum privasi data
+    4. Semua pencarian akan dicatat untuk keperluan audit
+    5. Pengguna bertanggung jawab penuh atas penggunaan aplikasi ini
+    
+    Dengan melanjutkan, Anda menyetujui syarat dan ketentuan di atas.{Style.RESET_ALL}
+    """
+    print(disclaimer)
+    
+    consent = input(f"\n{Fore.YELLOW}Lanjutkan? (yes/no): {Style.RESET_ALL}")
+    if consent.lower() not in ['yes', 'y']:
+        print_colored("\n[!] Anda tidak menyetujui disclaimer. Program dihentikan.", "ERROR")
+        sys.exit(0)
+    print()
 
 def check_password():
     """Check activation password."""
@@ -83,8 +120,90 @@ def simulate_search():
                  colour="cyan", ncols=PROGRESS_BAR_WIDTH):
         time.sleep(0.03)
 
+def real_search(target):
+    """Perform real tracking lookup via API or database."""
+    print_colored("\n[INFO] Initiating Real-time Tracking...", "INFO")
+    loading_animation()
+    
+    # Perform actual lookup
+    result = perform_real_lookup(target)
+    
+    # Show progress
+    for _ in tqdm(range(100), desc="Tracking", 
+                 bar_format="{l_bar}█{bar}█{r_bar}",
+                 colour="green", ncols=PROGRESS_BAR_WIDTH):
+        time.sleep(0.02)
+    
+    return result
+
+def normalize_api_response(api_data, target):
+    """Normalize API response to standard format."""
+    normalized = {
+        "Waktu Pencarian": format_timestamp()
+    }
+    
+    # Map common API fields to our format
+    field_mapping = {
+        'name': 'Nama',
+        'full_name': 'Nama',
+        'gender': 'Jenis Kelamin',
+        'birth_date': 'Birthday',
+        'birthdate': 'Birthday',
+        'age': 'Umur',
+        'email': 'Email',
+        'street': 'Jalan',
+        'address': 'Jalan',
+        'city': 'Kota/Town',
+        'province': 'Provinsi',
+        'postal_code': 'Kode Pos',
+        'zip_code': 'Kode Pos',
+        'country': 'Negara',
+        'latitude': 'Latitude',
+        'lat': 'Latitude',
+        'longitude': 'Longitude',
+        'lon': 'Longitude',
+        'lng': 'Longitude',
+        'operator': 'Operator',
+        'carrier': 'Operator',
+        'card_type': 'Tipe Kartu',
+        'social_media': 'Social Media'
+    }
+    
+    for api_key, display_key in field_mapping.items():
+        if api_key in api_data:
+            normalized[display_key] = api_data[api_key]
+    
+    # Ensure required fields exist
+    if 'Nama' not in normalized:
+        normalized['Nama'] = api_data.get('name', 'Unknown')
+    
+    if 'Negara' not in normalized:
+        normalized['Negara'] = 'Indonesia'
+    
+    # Calculate age if we have birthday
+    if 'Birthday' in normalized and 'Umur' not in normalized:
+        age = calculate_age(normalized['Birthday'])
+        if age:
+            normalized['Umur'] = f"{age} tahun"
+    
+    # Detect operator for phone numbers
+    if target.startswith('08') and 'Operator' not in normalized:
+        api_client = APIClient()
+        operator = api_client.check_operator(target)
+        if operator:
+            normalized['Operator'] = operator
+    
+    # Generate missing fields if needed
+    if 'Email' not in normalized and 'Nama' in normalized:
+        normalized['Email'] = generate_email(normalized['Nama'])
+    
+    if 'Social Media' not in normalized and 'Nama' in normalized:
+        normalized['Social Media'] = generate_social_media(normalized['Nama'])
+    
+    return normalized
+
 def generate_random_data(phone_number=None):
-    """Generate random data for demonstration."""
+    """Generate random data for demonstration (fallback)."""
     name = random.choice(NAMES)
     birthday = f"{random.randint(*BIRTH_YEAR_RANGE)}-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
     age = calculate_age(birthday)
@@ -102,7 +221,8 @@ def generate_random_data(phone_number=None):
         "Negara": "Indonesia",
         "Latitude": f"{random.uniform(*LATITUDE_RANGE):.6f}",
         "Longitude": f"{random.uniform(*LONGITUDE_RANGE):.6f}",
-        "Waktu Pencarian": format_timestamp()
+        "Waktu Pencarian": format_timestamp(),
+        "Source": "Simulation"
     }
     
     if phone_number and phone_number.startswith('08'):
@@ -211,7 +331,7 @@ def export_result(data, target):
         print_colored(f"\n[!] Error saat export: {str(e)}", "ERROR")
 
 def batch_search():
-    """Search multiple numbers from file."""
+    """Search multiple numbers from file with real tracking."""
     print_colored(f"\n[INFO] Membaca file batch: {BATCH_INPUT_FILE}", "INFO")
     numbers = read_batch_file(BATCH_INPUT_FILE)
     
@@ -225,6 +345,12 @@ def batch_search():
         numbers = numbers[:MAX_BATCH_SIZE]
     
     print_colored(f"\n[INFO] Ditemukan {len(numbers)} nomor untuk dicari.", "INFO")
+    
+    if API_ENABLED:
+        print_colored(f"[INFO] Mode: Real Tracking via API/Database", "SUCCESS")
+    else:
+        print_colored(f"[INFO] Mode: Simulasi", "WARNING")
+    
     time.sleep(1)
     
     results = []
@@ -235,17 +361,32 @@ def batch_search():
             print_colored(f"[!] Melewati nomor tidak valid: {target}", "ERROR")
             continue
         
-        if not quick_mode:
-            simulate_search()
-        else:
-            time.sleep(0.2)
+        result = None
         
-        result = generate_random_data(target)
-        result['Target'] = target
-        results.append(result)
-        add_to_history(target, result)
-        display_result(result)
-        time.sleep(0.5)
+        # Try real tracking
+        if API_ENABLED:
+            api_result = perform_real_lookup(target)
+            if api_result:
+                result = normalize_api_response(api_result, target)
+                result["Source"] = "API/Database"
+            elif USE_FALLBACK_DATA:
+                result = generate_random_data(target)
+        else:
+            if not quick_mode:
+                simulate_search()
+            else:
+                time.sleep(0.2)
+            result = generate_random_data(target)
+        
+        if result:
+            result['Target'] = target
+            results.append(result)
+            add_to_history(target, result)
+            
+            # Show brief result for batch
+            print_colored(f"    Nama: {result.get('Nama', 'N/A')}", "INFO")
+            print_colored(f"    Kota: {result.get('Kota/Town', 'N/A')}", "INFO")
+            time.sleep(0.3)
     
     print_colored(f"\n[✓] Batch search selesai! {len(results)}/{len(numbers)} berhasil.", "SUCCESS")
     
@@ -578,20 +719,41 @@ def show_menu():
     print_colored(f"Mode Cepat: {mode_status}", "WARNING")
 
 def single_search():
-    """Perform single search."""
+    """Perform single search with real tracking or simulation."""
     target = input(f"\n{Fore.YELLOW}[?] Masukkan Nomor Telepon (08xxx) atau NIK: {Style.RESET_ALL}")
     
     if not validate_input(target, VALID_PHONE_PREFIX, NIK_LENGTH):
         time.sleep(2)
         return
     
-    if not quick_mode:
-        simulate_search()
-    else:
-        print_colored("\n[INFO] Mode cepat aktif - melewati animasi", "WARNING")
-        time.sleep(0.5)
+    result = None
     
-    result = generate_random_data(target)
+    # Try real tracking if enabled
+    if API_ENABLED:
+        if not quick_mode:
+            api_result = real_search(target)
+        else:
+            print_colored("\n[INFO] Mode cepat aktif - query langsung", "WARNING")
+            api_result = perform_real_lookup(target)
+        
+        if api_result:
+            result = normalize_api_response(api_result, target)
+            result["Source"] = "API/Database"
+            print_colored("[✓] Data ditemukan dari sumber real!", "SUCCESS")
+        elif USE_FALLBACK_DATA:
+            print_colored("[!] API tidak mengembalikan data, menggunakan simulasi", "WARNING")
+            time.sleep(1)
+    
+    # Fallback to simulation if API disabled or no results
+    if result is None:
+        if not quick_mode:
+            simulate_search()
+        else:
+            print_colored("\n[INFO] Mode cepat aktif - melewati animasi", "WARNING")
+            time.sleep(0.5)
+        
+        result = generate_random_data(target)
+    
     add_to_history(target, result)
     display_result(result)
     

@@ -1,12 +1,25 @@
-# Pegasus Lacak Nomor
+# Pegasus Lacak Nomor v3.0 - Real Tracking Edition
 
-Aplikasi Python untuk melacak nomor telepon dan NIK dari Telkomsel dengan interface yang user-friendly.
+Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking** menggunakan API eksternal dan database lokal, atau mode simulasi untuk testing.
+
+## ✨ **NEW: Real Tracking Mode**
+
+Aplikasi sekarang mendukung **pelacakan real-time** dengan:
+- 🌐 **API Integration** - Koneksi ke API eksternal untuk data real
+- 💾 **Local Database** - Query data dari SQLite lokal
+- 🔄 **Auto Fallback** - Otomatis fallback ke simulasi jika API gagal
+- 🔐 **Privacy Compliance** - Built-in disclaimer dan consent
+- ⚡ **Rate Limiting** - Proteksi dari API overload
+- 💰 **Caching** - Mengurangi API calls dengan smart caching
+
+📖 **[Baca Panduan Lengkap Real Tracking](REAL_TRACKING_GUIDE.md)**
 
 ## 🚀 Fitur
 
 ### Fitur Utama
 - 🔒 Password protection untuk keamanan
 - 📱 Pencarian nomor telepon (08xxx) dan NIK
+- 🌐 **Real Tracking** via API atau Database lokal
 - ⏳ Progress bar dengan animasi loading
 - 🎨 Interface berwarna dengan feedback visual
 - 📊 Tampilan hasil yang informatif dan terstruktur

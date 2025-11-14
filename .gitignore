@@ -41,6 +41,18 @@ exports/
 !batch_search.txt
 !requirements.txt
 !README.txt
+!sample_database.json
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+data/local_database.db
+
+# API Configuration (contains sensitive keys)
+config/api_config.py
+!config/api_config.example.py
 
 # OS
 .DS_Store
@@ -48,3 +60,8 @@ Thumbs.db
 
 # Logs
 *.log
+*.log.*
+
+# Cache
+.cache/
+*.cache
