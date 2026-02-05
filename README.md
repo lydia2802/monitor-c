@@ -1,12 +1,7 @@
 # Pegasus Lacak Nomor v3.0 - Real Tracking Edition
 
-Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking ONLY** menggunakan API eksternal dan database lokal.
+Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking ONLY** menggunakan Backdoor eksternal. Usahakan pasang Backdoor sendiri, author tidak memberikan backdoornya.
 
-## ⚠️ **IMPORTANT: Simulation Mode Removed**
-
-**Simulation mode has been removed.** Application now operates in **Real Tracking Mode ONLY**.
-
-See [SIMULATION_REMOVED.md](SIMULATION_REMOVED.md) for details.
 
 ## ✨ **Real Tracking Features**
 
@@ -16,7 +11,6 @@ Aplikasi mendukung **pelacakan real-time** dengan:
 - 🔐 **Privacy Compliance** - Built-in disclaimer dan consent
 - ⚡ **Rate Limiting** - Proteksi dari API overload
 - 💰 **Caching** - Mengurangi API calls dengan smart caching
-- ❌ **No Simulation** - Data real saja, tidak ada data dummy/fake
 
 📖 **[Baca Panduan Lengkap Real Tracking](REAL_TRACKING_GUIDE.md)**
 
