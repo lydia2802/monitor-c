@@ -26,13 +26,23 @@ from utils.helpers import (
     filter_history_by_location, filter_history_by_gender, export_to_report
 )
 from utils.api_client import perform_real_lookup, APIClient
+from utils.history_manager import HistoryManager
+from utils.logger import audit_logger
+from utils.health_check import health_checker
+from utils.input_validator import validator
+from utils.backup_manager import backup_manager
 
 # Initialize colorama
 init()
 
-# Global search history and favorites
-search_history = []
-favorites = []
+# Initialize managers
+history_manager = HistoryManager()
+audit_logger = audit_logger
+health_checker = health_checker
+validator = validator
+backup_manager = backup_manager
+
+# Global variables
 quick_mode = QUICK_SEARCH_MODE
 
 def print_banner():
@@ -201,20 +211,14 @@ def display_result(data):
 
 def add_to_history(target, result, note=""):
     """Add search to history."""
-    global search_history
-    if len(search_history) >= MAX_HISTORY_ITEMS:
-        search_history.pop(0)
-    
-    history_entry = {
-        'target': target,
-        'timestamp': format_timestamp(),
-        'result': result,
-        'note': note
-    }
-    search_history.append(history_entry)
+    # Use the new history manager
+    history_manager.add_search(target, result, note)
 
 def show_history():
     """Display search history."""
+    # Get history from the new history manager
+    search_history = history_manager.get_all_history()
+    
     if not search_history:
         print_colored("\n[!] History kosong. Belum ada pencarian yang dilakukan.", "WARNING")
         return
@@ -228,28 +232,38 @@ def show_history():
         print_colored(f"    Waktu: {entry['timestamp']}", "WARNING")
         print_colored(f"    Nama: {entry['result']['Nama']}", "INFO")
         print_colored(f"    Kota: {entry['result']['Kota/Town']}", "INFO")
+        if entry['note']:
+            print_colored(f"    Catatan: {entry['note']}", "WARNING")
+        if entry['is_favorite']:
+            print_colored(f"    ⭐ FAVORIT", "SUCCESS")
     
     print_colored(f"\n{'='*70}", "INFO")
     print_colored(f"Total: {len(search_history)} pencarian", "SUCCESS")
 
 def show_statistics():
     """Display search statistics."""
-    stats = calculate_statistics(search_history)
+    # Get history from the new history manager
+    search_history = history_manager.get_all_history()
     
-    if not stats:
+    if not search_history:
         print_colored("\n[!] Belum ada data untuk statistik.", "WARNING")
         return
+    
+    # Calculate statistics
+    total_searches = len(search_history)
+    targets = [h['target'] for h in search_history]
+    phone_numbers = sum(1 for t in targets if t.startswith('08'))
+    niks = total_searches - phone_numbers
     
     print_colored(f"\n{'='*70}", "INFO")
     print_colored("STATISTIK PENCARIAN", "SUCCESS")
     print_colored(f"{'='*70}", "INFO")
-    print_colored(f"Total Pencarian: {stats['total_searches']}", "INFO")
-    print_colored(f"Nomor Telepon: {stats['phone_numbers']}", "INFO")
-    print_colored(f"NIK: {stats['niks']}", "INFO")
-    if stats['first_search']:
-        print_colored(f"Pencarian Pertama: {stats['first_search']}", "WARNING")
-    if stats['last_search']:
-        print_colored(f"Pencarian Terakhir: {stats['last_search']}", "WARNING")
+    print_colored(f"Total Pencarian: {total_searches}", "INFO")
+    print_colored(f"Nomor Telepon: {phone_numbers}", "INFO")
+    print_colored(f"NIK: {niks}", "INFO")
+    if search_history:
+        print_colored(f"Pencarian Pertama: {search_history[-1]['timestamp']}", "WARNING")
+        print_colored(f"Pencarian Terakhir: {search_history[0]['timestamp']}", "WARNING")
     print_colored(f"{'='*70}", "INFO")
 
 def export_result(data, target):
@@ -305,9 +319,15 @@ def batch_search():
     for i, target in enumerate(numbers, 1):
         print_colored(f"\n[{i}/{len(numbers)}] Mencari: {target}", "INFO")
         
-        if not validate_input(target, VALID_PHONE_PREFIX, NIK_LENGTH):
+        # Use new input validator
+        is_valid, target_type, result_or_error = validator.validate_target(target)
+        
+        if not is_valid:
             print_colored(f"[!] Melewati nomor tidak valid: {target}", "ERROR")
             continue
+        
+        # Cleaned target
+        target = result_or_error
         
         result = None
         
@@ -316,8 +336,14 @@ def batch_search():
         if api_result:
             result = normalize_api_response(api_result, target)
             result["Source"] = "API/Database"
+            
+            # Log successful search
+            audit_logger.log_search(target, "API/Database", True)
         else:
             print_colored(f"[!] Data tidak ditemukan untuk: {target}", "WARNING")
+            
+            # Log failed search
+            audit_logger.log_search(target, "API/Database", False)
         
         if result:
             result['Target'] = target
@@ -352,6 +378,9 @@ def search_by_location():
 
 def advanced_filter_history():
     """Filter history with advanced options."""
+    # Get history from the new history manager
+    search_history = history_manager.get_all_history()
+    
     if not search_history:
         print_colored("\n[!] History kosong.", "WARNING")
         return
@@ -398,19 +427,26 @@ def advanced_filter_history():
 
 def show_visual_statistics():
     """Display statistics with ASCII charts."""
+    # Get history from the new history manager
+    search_history = history_manager.get_all_history()
+    
     if not search_history:
         print_colored("\n[!] Belum ada data untuk statistik.", "WARNING")
         return
     
-    stats = calculate_statistics(search_history)
+    # Calculate statistics
+    total_searches = len(search_history)
+    targets = [h['target'] for h in search_history]
+    phone_numbers = sum(1 for t in targets if t.startswith('08'))
+    niks = total_searches - phone_numbers
     
     print_colored(f"\n{'='*70}", "INFO")
     print_colored("STATISTIK VISUAL", "SUCCESS")
     print_colored(f"{'='*70}", "INFO")
     
     search_types = {
-        "Nomor Telepon": stats['phone_numbers'],
-        "NIK": stats['niks']
+        "Nomor Telepon": phone_numbers,
+        "NIK": niks
     }
     draw_ascii_chart(search_types, "Tipe Pencarian")
     
@@ -448,8 +484,6 @@ def calculate_distance_feature():
 
 def manage_favorites():
     """Manage favorite/bookmarked searches."""
-    global favorites
-    
     print_colored(f"\n{'='*70}", "INFO")
     print_colored("FAVORIT", "SUCCESS")
     print_colored(f"{'='*70}", "INFO")
@@ -461,11 +495,16 @@ def manage_favorites():
     choice = input(f"\n{Fore.YELLOW}Pilih (1-4): {Style.RESET_ALL}")
     
     if choice == '1':
+        # Get history from the new history manager
+        search_history = history_manager.get_all_history()
+        
         if not search_history:
             print_colored("\n[!] History kosong.", "WARNING")
             return
         
-        if len(favorites) >= MAX_FAVORITES:
+        # Check if we have space (MAX_FAVORITES is still used for UI consistency)
+        current_favorites = history_manager.get_favorites_count()
+        if current_favorites >= MAX_FAVORITES:
             print_colored(f"\n[!] Favorit penuh (max {MAX_FAVORITES}).", "WARNING")
             return
         
@@ -477,7 +516,13 @@ def manage_favorites():
         try:
             idx = int(idx) - 1
             if 0 <= idx < len(search_history[-10:]):
-                favorites.append(search_history[-(10-idx)])
+                selected_entry = search_history[-(10-idx)]
+                # Add to favorites using history manager
+                history_manager.add_favorite(
+                    selected_entry['target'], 
+                    selected_entry['result'], 
+                    selected_entry.get('note', '')
+                )
                 print_colored("\n[✓] Ditambahkan ke favorit!", "SUCCESS")
             else:
                 print_colored("\n[!] Nomor tidak valid!", "ERROR")
@@ -485,6 +530,9 @@ def manage_favorites():
             print_colored("\n[!] Input tidak valid!", "ERROR")
     
     elif choice == '2':
+        # Get favorites from the new history manager
+        favorites = history_manager.get_all_favorites()
+        
         if not favorites:
             print_colored("\n[!] Favorit kosong.", "WARNING")
             return
@@ -497,8 +545,13 @@ def manage_favorites():
             print_colored(f"\n[{i}] {fav['target']}", "INFO")
             print_colored(f"    Nama: {fav['result']['Nama']}", "INFO")
             print_colored(f"    Kota: {fav['result']['Kota/Town']}", "INFO")
+            if fav['note']:
+                print_colored(f"    Catatan: {fav['note']}", "WARNING")
     
     elif choice == '3':
+        # Get favorites from the new history manager
+        favorites = history_manager.get_all_favorites()
+        
         if not favorites:
             print_colored("\n[!] Favorit kosong.", "WARNING")
             return
@@ -510,7 +563,9 @@ def manage_favorites():
         try:
             idx = int(idx) - 1
             if 0 <= idx < len(favorites):
-                favorites.pop(idx)
+                selected_fav = favorites[idx]
+                # Remove from favorites using history manager
+                history_manager.remove_favorite(selected_fav['target'])
                 print_colored("\n[✓] Dihapus dari favorit!", "SUCCESS")
             else:
                 print_colored("\n[!] Nomor tidak valid!", "ERROR")
@@ -519,21 +574,25 @@ def manage_favorites():
 
 def clear_history():
     """Clear search history."""
-    global search_history
+    # Get current history count
+    history_count = history_manager.get_search_count()
     
-    if not search_history:
+    if history_count == 0:
         print_colored("\n[!] History sudah kosong.", "WARNING")
         return
     
     confirm = input(f"\n{Fore.YELLOW}[!] Hapus semua history? (y/n): {Style.RESET_ALL}")
     if confirm.lower() == 'y':
-        search_history.clear()
+        history_manager.clear_history()
         print_colored("\n[✓] History berhasil dihapus!", "SUCCESS")
     else:
         print_colored("\n[!] Dibatalkan.", "WARNING")
 
 def add_note_to_search():
     """Add note to a search in history."""
+    # Get history from the new history manager
+    search_history = history_manager.get_all_history()
+    
     if not search_history:
         print_colored("\n[!] History kosong.", "WARNING")
         return
@@ -547,8 +606,10 @@ def add_note_to_search():
     try:
         idx = int(idx) - 1
         if 0 <= idx < len(search_history[-10:]):
+            selected_entry = search_history[-(10-idx)]
             note = input(f"{Fore.YELLOW}Masukkan catatan: {Style.RESET_ALL}")
-            search_history[-(10-idx)]['note'] = note
+            # Add note using history manager
+            history_manager.add_note_to_search(selected_entry['target'], note)
             print_colored("\n[✓] Catatan ditambahkan!", "SUCCESS")
         else:
             print_colored("\n[!] Nomor tidak valid!", "ERROR")
@@ -594,6 +655,75 @@ def show_operator_info():
         print_colored(f"\n{op}:", "SUCCESS")
         print_colored(f"  Prefix: {', '.join(prefixes)}", "INFO")
 
+
+def check_api_health():
+    """Check API and database health."""
+    print_colored(f"\n{'='*70}", "INFO")
+    print_colored("CEK KESEHATAN SISTEM", "SUCCESS")
+    print_colored(f"{'='*70}", "INFO")
+    
+    print_colored("\n[*] Memeriksa kesehatan API...", "INFO")
+    api_healthy = health_checker.check_api_health()
+    
+    print_colored("\n[*] Memeriksa kesehatan database...", "INFO")
+    db_healthy = health_checker.check_database_health()
+    
+    print_colored(f"\n{'='*70}", "INFO")
+    print_colored("HASIL CEK KESEHATAN", "SUCCESS")
+    print_colored(f"{'='*70}", "INFO")
+    
+    if api_healthy and db_healthy:
+        print_colored("[✓] Semua sistem sehat dan siap digunakan!", "SUCCESS")
+    else:
+        print_colored("[!] Ada masalah dengan beberapa sistem.", "WARNING")
+        if not api_healthy:
+            print_colored("  - API: Tidak sehat", "ERROR")
+        if not db_healthy:
+            print_colored("  - Database: Tidak sehat", "ERROR")
+    
+    input(f"\n{Fore.YELLOW}[Enter untuk kembali ke menu]{Style.RESET_ALL}")
+
+
+def backup_restore_menu():
+    """Backup and restore menu."""
+    while True:
+        print_colored(f"\n{'='*70}", "INFO")
+        print_colored("BACKUP & RESTORE", "SUCCESS")
+        print_colored(f"{'='*70}", "INFO")
+        print("1. Buat Backup")
+        print("2. Restore Backup")
+        print("3. Lihat Backup")
+        print("4. Kembali")
+        
+        choice = input(f"\n{Fore.YELLOW}Pilih (1-4): {Style.RESET_ALL}")
+        
+        if choice == '1':
+            print_colored("\n[*] Membuat backup...", "INFO")
+            backup_manager.create_backup()
+            print_colored("[✓] Backup selesai!", "SUCCESS")
+        elif choice == '2':
+            backups = backup_manager.list_backups()
+            if backups:
+                idx = input(f"\n{Fore.YELLOW}Pilih backup (1-{len(backups)}): {Style.RESET_ALL}")
+                try:
+                    idx = int(idx) - 1
+                    if 0 <= idx < len(backups):
+                        backup_file = f"{backup_manager.backup_dir}/{backups[idx]}"
+                        backup_manager.restore_backup(backup_file)
+                    else:
+                        print_colored("[!] Nomor tidak valid!", "ERROR")
+                except ValueError:
+                    print_colored("[!] Input tidak valid!", "ERROR")
+            else:
+                print_colored("\n[!] Tidak ada backup tersedia.", "WARNING")
+        elif choice == '3':
+            backup_manager.list_backups()
+        elif choice == '4':
+            break
+        else:
+            print_colored("\n[!] Pilihan tidak valid!", "ERROR")
+            time.sleep(1)
+
 def show_menu():
     """Display main menu."""
     print_colored(f"\n{'='*70}", "INFO")
@@ -614,6 +744,8 @@ def show_menu():
     print("13. Mode Cepat (Toggle)")
     print("14. Generate Laporan Lengkap")
     print("15. Info Operator")
+    print("16. Cek Kesehatan API")
+    print("17. Backup & Restore")
     print("0. Keluar")
     print_colored(f"{'='*70}", "INFO")
     
@@ -624,9 +756,16 @@ def single_search():
     """Perform single search with real tracking."""
     target = input(f"\n{Fore.YELLOW}[?] Masukkan Nomor Telepon (08xxx) atau NIK: {Style.RESET_ALL}")
     
-    if not validate_input(target, VALID_PHONE_PREFIX, NIK_LENGTH):
+    # Use new input validator
+    is_valid, target_type, result_or_error = validator.validate_target(target)
+    
+    if not is_valid:
+        print_colored(f"\n[!] {result_or_error}", "ERROR")
         time.sleep(2)
         return
+    
+    # Cleaned target
+    target = result_or_error
     
     result = None
     
@@ -641,13 +780,20 @@ def single_search():
         result = normalize_api_response(api_result, target)
         result["Source"] = "API/Database"
         print_colored("[✓] Data ditemukan dari sumber real!", "SUCCESS")
+        
+        # Log successful search
+        audit_logger.log_search(target, "API/Database", True)
     else:
         print_colored("\n[!] Data tidak ditemukan. Pastikan API/Database dikonfigurasi dengan benar.", "ERROR")
         print_colored("[!] Atau nomor/NIK tidak ada dalam database.", "WARNING")
+        
+        # Log failed search
+        audit_logger.log_search(target, "API/Database", False)
         time.sleep(3)
         return
     
-    add_to_history(target, result)
+    # Add to history using new history manager
+    history_manager.add_search(target, result)
     display_result(result)
     
     choice = input(f"\n{Fore.YELLOW}[?] Export hasil? (y/n): {Style.RESET_ALL}")
@@ -699,6 +845,10 @@ def main():
             generate_detailed_report()
         elif choice == '15':
             show_operator_info()
+        elif choice == '16':
+            check_api_health()
+        elif choice == '17':
+            backup_restore_menu()
         elif choice == '0':
             break
         else:
@@ -706,7 +856,7 @@ def main():
             time.sleep(1)
             continue
         
-        if choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '14', '15']:
+        if choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '14', '15', '16']:
             input(f"\n{Fore.YELLOW}[Enter untuk kembali ke menu]{Style.RESET_ALL}")
     
     print_colored("\n[!] Terima kasih telah menggunakan Pegasus Lacak Nomor!", "SUCCESS")
