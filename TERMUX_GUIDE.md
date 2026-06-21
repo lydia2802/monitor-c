@@ -10,23 +10,23 @@
 
 ## Instalasi Otomatis (Direkomendasikan)
 
+> **Jika muncul error SSL / "Unable to locate package"**, jalankan langkah 1 dulu sebelum yang lain.
+
 Jalankan perintah ini **satu per satu** di Termux:
 
 ```bash
-# 1. Izinkan akses storage (opsional, untuk export ke folder Download)
-termux-setup-storage
+# 1. WAJIB: Ganti mirror Termux ke Cloudflare (atasi SSL error mirror lama)
+echo "deb https://packages-cf.termux.dev/apt/termux-main stable main" > $PREFIX/etc/apt/sources.list
+pkg update -y
 
-# 2. Update Termux
-pkg update -y && pkg upgrade -y
-
-# 3. Pasang git dan python
+# 2. Pasang git dan python
 pkg install -y git python
 
-# 4. Clone repo
+# 3. Clone repo
 git clone https://github.com/sobri3195/Pegasus-Lacak-Nomor.git
 cd Pegasus-Lacak-Nomor
 
-# 5. Jalankan setup otomatis
+# 4. Jalankan setup otomatis (mirror sudah otomatis diperbaiki di dalam script)
 bash setup_termux.sh
 ```
 
@@ -35,8 +35,11 @@ bash setup_termux.sh
 ## Instalasi Manual (Langkah per Langkah)
 
 ```bash
-# Update & pasang dependensi sistem
-pkg update -y && pkg upgrade -y
+# WAJIB: Ganti mirror dulu (atasi SSL error)
+echo "deb https://packages-cf.termux.dev/apt/termux-main stable main" > $PREFIX/etc/apt/sources.list
+pkg update -y
+
+# Pasang dependensi sistem
 pkg install -y python git
 
 # Clone repo
@@ -120,6 +123,27 @@ pip install schedule
 
 ## Troubleshooting
 
+### SSL Error / "Unable to locate package git/python" ⬅ ERROR PALING UMUM
+```
+SSL connection failed: error:0A000086:SSL routines::certificate verify failed
+Error: Unable to locate package git
+Error: Unable to locate package python
+```
+**Penyebab:** Mirror Termux lama (`termux.net`) sudah tidak valid.  
+**Solusi:**
+```bash
+# Ganti ke mirror Cloudflare (mirror resmi & paling stabil)
+echo "deb https://packages-cf.termux.dev/apt/termux-main stable main" > $PREFIX/etc/apt/sources.list
+pkg update -y
+pkg install -y git python
+```
+
+Jika masih gagal, coba mirror alternatif:
+```bash
+echo "deb https://dl.kcubeterm.com stable main" > $PREFIX/etc/apt/sources.list
+pkg update -y
+```
+
 ### `ModuleNotFoundError: No module named 'config.api_config'`
 ```bash
 cp config/api_config.example.py config/api_config.py
@@ -138,7 +162,6 @@ python main.py
 
 ### `Permission denied` saat menjalankan setup_termux.sh
 ```bash
-chmod +x setup_termux.sh
 bash setup_termux.sh
 ```
 
