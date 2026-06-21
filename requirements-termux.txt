@@ -1,0 +1,15 @@
+# Dependensi inti — wajib dipasang
+requests==2.31.0
+tqdm==4.66.1
+colorama==0.4.6
+
+# Dependensi opsional — pasang jika ingin fitur lengkap
+# flask==3.0.0
+# flask-cors==4.0.0
+# schedule==1.2.0
+# openpyxl==3.1.2
+
+# Catatan untuk Termux:
+# matplotlib, scikit-learn, dan folium memerlukan kompiler C.
+# Pasang dulu dengan: pkg install python-numpy
+# kemudian: pip install matplotlib scikit-learn folium
