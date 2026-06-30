@@ -1,4 +1,4 @@
 """
-Managers package for Pegasus Lacak Nomor
+Managers package for Lacak Nomor
 Contains manager classes for various functionalities
 """

@@ -1,8 +1,8 @@
-# 🛡️ Pegasus Lacak Nomor — Unified Monitoring Dashboard
+# 🛡️ Lacak Nomor — Unified Monitoring Dashboard
 
-Dokumen ini menjelaskan **dashboard monitoring terpadu** untuk Pegasus Lacak Nomor: satu server yang menggabungkan REST API dan web UI, bisa diakses **online** lewat browser/link, sementara seluruh data pencarian, history, dan statistik tetap **tersimpan offline** di SQLite lokal (folder `data/`).
+Dokumen ini menjelaskan **dashboard monitoring terpadu** untuk Lacak Nomor: satu server yang menggabungkan REST API dan web UI, bisa diakses **online** lewat browser/link, sementara seluruh data pencarian, history, dan statistik tetap **tersimpan offline** di SQLite lokal (folder `data/`).
 
-> Catatan: project ini adalah tool pelacak nomor telepon/NIK (CLI Python), bukan tool MITRE ATT&CK/Pegasus-spyware-scanner. Dokumen ini mendeskripsikan struktur repo yang sebenarnya.
+> Catatan: project ini adalah tool pelacak nomor telepon/NIK (CLI Python), bukan tool MITRE ATT&CK/spyware-scanner. Dokumen ini mendeskripsikan struktur repo yang sebenarnya.
 
 ## 📋 Komponen
 
@@ -29,8 +29,8 @@ Hasil pencarian yang dilakukan lewat web dashboard otomatis tersimpan ke `data/a
 ### 2. Clone & masuk ke folder project
 
 ```bash
-git clone https://github.com/lydia2802/Pegasus-Lacak-Nomor.git
-cd Pegasus-Lacak-Nomor
+git clone https://github.com/lydia2802/monitor-c.git
+cd monitor-c
 ```
 
 ### 3. Buat virtual environment (opsional tapi disarankan)
@@ -84,7 +84,7 @@ python run_dashboard.py --host 127.0.0.1 --port 8080  # custom
 Server akan menampilkan:
 
 ```
-[*] Starting Pegasus Unified Dashboard Server...
+[*] Starting Unified Dashboard Server...
 [*] Web Dashboard: http://127.0.0.1:5000/dashboard
 [*] REST API Base: http://127.0.0.1:5000/api/v1
 [*] Health Check: http://127.0.0.1:5000/api/v1/health

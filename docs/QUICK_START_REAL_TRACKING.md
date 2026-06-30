@@ -1,6 +1,6 @@
 # Quick Start - Real Tracking
 
-Panduan cepat untuk memulai menggunakan fitur Real Tracking di Pegasus Lacak Nomor v3.0.
+Panduan cepat untuk memulai menggunakan fitur Real Tracking di Lacak Nomor v3.0.
 
 ## 📋 Pilihan Mode
 
@@ -23,7 +23,7 @@ Query data dari database SQLite lokal. Untuk data yang Anda miliki sendiri.
 
 ```bash
 # 1. Clone atau download repository
-cd /path/to/pegasus-lacak-nomor
+cd /path/to/lacak-nomor
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -102,7 +102,7 @@ python main.py
 Aplikasi akan menampilkan:
 ```
 ╔════════════════════════════════════════════════════════════════════╗
-║                   PEGASUS LACAK NOMOR v3.0                        ║
+║                   LACAK NOMOR v3.0                        ║
 ║                 [REAL TRACKING MODE]                              ║
 ╚════════════════════════════════════════════════════════════════════╝
 

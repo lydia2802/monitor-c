@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pegasus Lacak Nomor v3.0 sekarang mendukung integrasi dengan API eksternal untuk real tracking. Dokumen ini menjelaskan cara mengintegrasikan aplikasi dengan berbagai API provider.
+Lacak Nomor v3.0 sekarang mendukung integrasi dengan API eksternal untuk real tracking. Dokumen ini menjelaskan cara mengintegrasikan aplikasi dengan berbagai API provider.
 
 ## Architecture
 

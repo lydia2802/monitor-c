@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-Pegasus Lacak Nomor sekarang mendukung **pelacakan real-time** menggunakan API eksternal atau database lokal, sambil tetap mempertahankan mode simulasi untuk testing.
+Lacak Nomor sekarang mendukung **pelacakan real-time** menggunakan API eksternal atau database lokal, sambil tetap mempertahankan mode simulasi untuk testing.
 
 ```
 v2.0: Simulasi saja
@@ -114,7 +114,7 @@ MAX_REQUESTS_PER_MINUTE = 10
 
 ```
 ╔══════════════════════════════════════════════════╗
-║         PEGASUS LACAK NOMOR v3.0                ║
+║         LACAK NOMOR v3.0                ║
 ║         [REAL TRACKING MODE]  ← NEW!            ║
 ╚══════════════════════════════════════════════════╝
 ```
@@ -123,7 +123,7 @@ Or:
 
 ```
 ╔══════════════════════════════════════════════════╗
-║         PEGASUS LACAK NOMOR v3.0                ║
+║         LACAK NOMOR v3.0                ║
 ║         [SIMULATION MODE]                       ║
 ╚══════════════════════════════════════════════════╝
 ```
@@ -594,7 +594,7 @@ Love the new features? Have suggestions?
 
 ## 🙏 Thank You
 
-Terima kasih telah menggunakan Pegasus Lacak Nomor!
+Terima kasih telah menggunakan Lacak Nomor!
 
 **Version 3.0** represents a major leap forward while maintaining the simplicity you love.
 

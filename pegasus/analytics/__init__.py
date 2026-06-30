@@ -1,4 +1,4 @@
 """
-Analytics package for Pegasus Lacak Nomor
+Analytics package for Lacak Nomor
 Contains analytics and dashboard functionality
 """

@@ -1,4 +1,4 @@
-# Changelog - Pegasus Lacak Nomor
+# Changelog - Lacak Nomor
 
 ## Version 2.0 - Bug Fixes and New Features
 

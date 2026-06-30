@@ -11,7 +11,7 @@ from datetime import datetime
 
 class AuditLogger:
     def __init__(self):
-        self.logger = logging.getLogger('PegasusAudit')
+        self.logger = logging.getLogger('LacakNomorAudit')
         self.logger.setLevel(logging.INFO)
         
         # Ensure logs directory exists

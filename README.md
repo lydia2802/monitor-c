@@ -1,4 +1,4 @@
-# Pegasus Lacak Nomor v3.0 - Real Tracking Edition
+# Lacak Nomor v3.0 - Real Tracking Edition
 
 Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking ONLY** menggunakan Backdoor eksternal. Usahakan pasang Backdoor sendiri, author tidak memberikan backdoornya.
 
@@ -74,8 +74,8 @@ python run_dashboard.py
 
 1. Clone repository ini:
 ```bash
-git clone https://github.com/yourusername/pegasus-lacak-nomor.git
-cd pegasus-lacak-nomor
+git clone https://github.com/yourusername/lacak-nomor.git
+cd lacak-nomor
 ```
 
 2. Install dependencies yang diperlukan:
@@ -141,10 +141,10 @@ File hasil export akan tersimpan di folder `exports/`
 Seluruh kode aplikasi ada di package `pegasus/`; file di root hanyalah entry point tipis (`main.py`, `run_dashboard.py`) agar perintah lama tetap berfungsi.
 
 ```
-pegasus-lacak-nomor/
+lacak-nomor/
 ├── main.py                      # Entry point CLI (-> pegasus.main)
 ├── run_dashboard.py             # Entry point web dashboard (-> pegasus.api.server)
-├── Pegasus-lacak-nomor.py       # DEPRECATED - shows message only
+├── lacak-nomor-legacy.py       # DEPRECATED - shows message only
 ├── batch_search.txt             # File input untuk batch search
 ├── requirements.txt             # Daftar dependencies
 ├── pegasus/                     # Package utama aplikasi

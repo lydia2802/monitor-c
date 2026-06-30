@@ -1,4 +1,4 @@
-# Panduan Real Tracking - Pegasus Lacak Nomor v3.0
+# Panduan Real Tracking - Lacak Nomor v3.0
 
 ## 🔍 Overview
 
@@ -294,7 +294,7 @@ if __name__ == '__main__':
 ## 📞 Support
 
 Untuk pertanyaan atau bantuan:
-- Email: support@pegasus-lacak-nomor.com
+- Email: support@lacak-nomor.com
 - GitHub Issues: [Link to repo]
 
 ---

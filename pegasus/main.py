@@ -95,7 +95,7 @@ def print_banner():
     """Print the application banner."""
     banner = f"""
     {Fore.CYAN}╔════════════════════════════════════════════════════════════════════════════╗
-    ║                         PEGASUS LACAK NOMOR v3.0                          ║
+    ║                              LACAK NOMOR v3.0                              ║
     ║                     Created by: Letda Kes dr. Sobri                       ║
     ║                          REAL TRACKING SYSTEM                             ║
     ║                     {Fore.GREEN}[API & DATABASE ENABLED]{Fore.CYAN}                      ║
@@ -1323,7 +1323,7 @@ def main():
     if AUTOMATION_AVAILABLE:
         stop_scheduler()
     
-    print_colored("\n[!] Terima kasih telah menggunakan Pegasus Lacak Nomor!", "SUCCESS")
+    print_colored("\n[!] Terima kasih telah menggunakan Lacak Nomor!", "SUCCESS")
     time.sleep(2)
 
 if __name__ == "__main__":

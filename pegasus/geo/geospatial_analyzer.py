@@ -238,7 +238,7 @@ class GeospatialAnalyzer:
         html = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Pegasus - Search Heatmap</title>
+    <title>Search Heatmap</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -296,7 +296,7 @@ class GeospatialAnalyzer:
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {{
             var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML = '<h4>Pegasus Search Heatmap</h4><p>""" + heatData.length + """ locations</p>';
+            div.innerHTML = '<h4>Search Heatmap</h4><p>""" + heatData.length + """ locations</p>';
             return div;
         }};
         legend.addTo(map);
@@ -339,7 +339,7 @@ class GeospatialAnalyzer:
         html = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Pegasus - Cluster Map</title>
+    <title>Cluster Map</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

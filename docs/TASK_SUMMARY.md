@@ -10,7 +10,7 @@
 
 ## Objective
 
-Remove all simulation features from Pegasus Lacak Nomor, making it a **Real Tracking Only** application.
+Remove all simulation features from Lacak Nomor, making it a **Real Tracking Only** application.
 
 ---
 
@@ -50,7 +50,7 @@ Remove all simulation features from Pegasus Lacak Nomor, making it a **Real Trac
    - ❌ Removed: Entire "FALLBACK & ERROR HANDLING" section
    - ✏️ Updated: Comments to remove simulation references
 
-#### 5. **`Pegasus-lacak-nomor.py`** (Legacy File)
+#### 5. **`lacak-nomor-legacy.py`** (Legacy File)
    - ✏️ Completely rewritten to show deprecation message only
    - Now displays warning that simulation mode is removed
    - Directs users to use `main.py` instead
@@ -162,7 +162,7 @@ Total: 100% tests passing
 2. `utils/api_client.py` - API client
 3. `config/settings.py` - Settings
 4. `config/api_config.example.py` - Config template
-5. `Pegasus-lacak-nomor.py` - Legacy file
+5. `lacak-nomor-legacy.py` - Legacy file
 6. `test_features.py` - Test suite
 7. `test_real_tracking.py` - Test suite
 8. `README.md` - Documentation
@@ -197,7 +197,7 @@ Total: 100% tests passing
    - No fake data generation
 
 4. **Legacy file deprecated**
-   - `Pegasus-lacak-nomor.py` no longer functional
+   - `lacak-nomor-legacy.py` no longer functional
    - Shows deprecation message only
 
 ---
