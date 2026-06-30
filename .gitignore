@@ -51,8 +51,8 @@ exports/
 data/local_database.db
 
 # API Configuration (contains sensitive keys)
-config/api_config.py
-!config/api_config.example.py
+pegasus/config/api_config.py
+!pegasus/config/api_config.example.py
 
 # User database (contains sensitive data)
 data/users.db

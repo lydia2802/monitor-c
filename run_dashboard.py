@@ -11,7 +11,7 @@ Usage:
 
 import argparse
 
-from api.server import start_api_server
+from pegasus.api.server import start_api_server
 
 
 def main():
