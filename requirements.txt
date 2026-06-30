@@ -2,12 +2,12 @@ requests==2.31.0
 tqdm==4.66.1
 colorama==0.4.6
 
+# Required for the unified monitoring dashboard (REST API + web UI)
+flask==3.0.0
+flask-cors==4.0.0
+
 # Optional dependencies for advanced features
 # Uncomment/install as needed:
-
-# For API Server
-# flask==3.0.0
-# flask-cors==4.0.0
 
 # For Scheduled Tasks
 # schedule==1.2.0

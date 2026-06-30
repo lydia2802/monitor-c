@@ -14,6 +14,19 @@ Aplikasi mendukung **pelacakan real-time** dengan:
 
 📖 **[Baca Panduan Lengkap Real Tracking](REAL_TRACKING_GUIDE.md)**
 
+## 🖥️ Unified Monitoring Dashboard (Web)
+
+Selain CLI, tersedia **dashboard web terpadu** (REST API + UI) yang bisa diakses online via browser, dengan data tetap tersimpan offline di SQLite lokal:
+
+```bash
+pip install -r requirements.txt
+cp config/api_config.example.py config/api_config.py
+python run_dashboard.py
+# buka http://localhost:5000/dashboard (login: admin / admin123)
+```
+
+📖 **[Baca Panduan Lengkap Dashboard](README_DASHBOARD.md)**
+
 ## 🚀 Fitur
 
 ### Fitur Utama

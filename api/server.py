@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Try to import Flask
 try:
-    from flask import Flask, request, jsonify, make_response
+    from flask import Flask, request, jsonify, make_response, render_template, redirect, url_for
     from flask_cors import CORS
     FLASK_AVAILABLE = True
 except ImportError:
@@ -25,7 +25,7 @@ from managers.user_manager import UserManager
 from models.user import Permission
 from utils.api_client import perform_real_lookup
 from utils.input_validator import validator
-from utils.helpers import normalize_api_response, print_colored
+from utils.helpers import print_colored
 from analytics.dashboard import AnalyticsDashboard
 from ml.anomaly_detector import AnomalyDetector
 
@@ -49,7 +49,16 @@ class APIServer:
     
     def _setup_routes(self):
         """Setup API routes"""
-        
+
+        # Web dashboard (single-page UI served on the same host/port as the API)
+        @self.app.route('/', methods=['GET'])
+        def web_root():
+            return redirect(url_for('web_dashboard'))
+
+        @self.app.route('/dashboard', methods=['GET'])
+        def web_dashboard():
+            return render_template('dashboard.html')
+
         # Health check endpoint
         @self.app.route('/api/v1/health', methods=['GET'])
         def api_health():
@@ -124,14 +133,15 @@ class APIServer:
             
             if api_result:
                 normalized = self._normalize_api_response(api_result, phone)
-                
+                self._record_search(phone, normalized)
+
                 # Check for anomaly
                 search_entry = {
                     'target': phone,
                     'timestamp': datetime.now().isoformat(),
                     'result': normalized
                 }
-                
+
                 if self.anomaly_detector.is_trained:
                     is_anomaly, confidence, reasons = self.anomaly_detector.detect_anomaly(search_entry)
                     if is_anomaly:
@@ -187,7 +197,8 @@ class APIServer:
             
             if api_result:
                 normalized = self._normalize_api_response(api_result, nik)
-                
+                self._record_search(nik, normalized)
+
                 return jsonify({
                     'success': True,
                     'data': normalized
@@ -197,7 +208,7 @@ class APIServer:
                     'success': False,
                     'error': 'Not found'
                 }), 404
-        
+
         # Get history endpoint
         @self.app.route('/api/v1/history', methods=['GET'])
         def api_get_history():
@@ -272,6 +283,40 @@ class APIServer:
                 }
             }), 200
         
+        # Operator distribution endpoint
+        @self.app.route('/api/v1/analytics/operators', methods=['GET'])
+        def api_get_operators():
+            """API endpoint untuk distribusi operator"""
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({'error': 'Authentication required'}), 401
+
+            if not self.user_manager.current_user:
+                return jsonify({'error': 'Not authenticated'}), 401
+
+            dashboard = AnalyticsDashboard()
+            return jsonify({
+                'success': True,
+                'data': dashboard.get_operator_distribution()
+            }), 200
+
+        # Gender distribution endpoint
+        @self.app.route('/api/v1/analytics/genders', methods=['GET'])
+        def api_get_genders():
+            """API endpoint untuk distribusi gender"""
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({'error': 'Authentication required'}), 401
+
+            if not self.user_manager.current_user:
+                return jsonify({'error': 'Not authenticated'}), 401
+
+            dashboard = AnalyticsDashboard()
+            return jsonify({
+                'success': True,
+                'data': dashboard.get_gender_distribution()
+            }), 200
+
         # Anomaly detection endpoint
         @self.app.route('/api/v1/analytics/anomalies', methods=['GET'])
         def api_get_anomalies():
@@ -350,6 +395,15 @@ class APIServer:
             except Exception as e:
                 return jsonify({'error': str(e)}), 400
     
+    def _record_search(self, target, normalized_result):
+        """Persist a dashboard/API-driven search into the local history database
+        so it shows up in the History and Analytics views (offline storage)."""
+        try:
+            from utils.history_manager import HistoryManager
+            HistoryManager().add_search(target, normalized_result)
+        except Exception as e:
+            print_colored(f"[!] Could not save search to history: {str(e)}", "WARNING")
+
     def _normalize_api_response(self, api_data, target):
         """Normalize API response to standard format"""
         from utils.helpers import format_timestamp, calculate_age, generate_email, generate_social_media
@@ -421,10 +475,12 @@ class APIServer:
             print_colored("[i] Install with: pip install flask flask-cors", "INFO")
             return False
         
-        print_colored(f"[*] Starting Pegasus API Server...", "INFO")
+        display_host = '127.0.0.1' if self.host == '0.0.0.0' else self.host
+        print_colored(f"[*] Starting Pegasus Unified Dashboard Server...", "INFO")
         print_colored(f"[*] Host: {self.host}:{self.port}", "INFO")
-        print_colored(f"[*] Access: http://{self.host}:{self.port}", "INFO")
-        print_colored(f"[*] Health Check: http://{self.host}:{self.port}/api/v1/health", "INFO")
+        print_colored(f"[*] Web Dashboard: http://{display_host}:{self.port}/dashboard", "SUCCESS")
+        print_colored(f"[*] REST API Base: http://{display_host}:{self.port}/api/v1", "INFO")
+        print_colored(f"[*] Health Check: http://{display_host}:{self.port}/api/v1/health", "INFO")
         
         self.app.run(host=self.host, port=self.port, debug=self.debug)
         return True
