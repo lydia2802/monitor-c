@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pegasus Lacak Nomor - Unified Monitoring Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+
+<div id="login-view" class="login-view">
+  <form id="login-form" class="login-card">
+    <h1>Pegasus Lacak Nomor</h1>
+    <p class="subtitle">Unified Monitoring Dashboard</p>
+    <div id="login-error" class="error-msg"></div>
+    <label>Username</label>
+    <input type="text" id="login-username" autocomplete="username" required>
+    <label>Password</label>
+    <input type="password" id="login-password" autocomplete="current-password" required>
+    <button type="submit">Login</button>
+    <p class="hint">Default: admin / admin123 (ganti setelah login pertama)</p>
+  </form>
+</div>
+
+<div id="app-view" class="app-view hidden">
+  <header class="topbar">
+    <div class="brand">🛡️ Pegasus Monitoring Dashboard</div>
+    <div class="status">
+      <span id="server-status" class="badge badge-unknown">checking...</span>
+      <span id="whoami"></span>
+      <button id="logout-btn" class="btn-link">Logout</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="search">Pencarian</button>
+    <button class="tab-btn" data-tab="history">History</button>
+    <button class="tab-btn" data-tab="anomalies">Anomali</button>
+    <button class="tab-btn admin-only hidden" data-tab="users">Users</button>
+  </nav>
+
+  <main>
+    <section id="tab-overview" class="tab-panel active">
+      <div class="cards" id="stat-cards"></div>
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Search Trend (24 Jam)</h2>
+          <div id="trend-chart" class="bar-chart"></div>
+        </div>
+        <div class="panel">
+          <h2>Distribusi Operator</h2>
+          <div id="operator-chart" class="bar-chart"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Top Lokasi (Hari Ini)</h2>
+        <div id="location-list" class="bar-chart"></div>
+      </div>
+    </section>
+
+    <section id="tab-search" class="tab-panel">
+      <div class="panel">
+        <h2>Pencarian Real-time</h2>
+        <form id="search-form" class="inline-form">
+          <select id="search-type">
+            <option value="phone">Nomor Telepon</option>
+            <option value="nik">NIK</option>
+          </select>
+          <input type="text" id="search-target" placeholder="08xxxxxxxxxx atau 16 digit NIK" required>
+          <button type="submit">Cari</button>
+        </form>
+        <div id="search-result" class="result-box"></div>
+      </div>
+    </section>
+
+    <section id="tab-history" class="tab-panel">
+      <div class="panel">
+        <h2>Search History</h2>
+        <button id="refresh-history" class="btn-secondary">Refresh</button>
+        <table class="data-table">
+          <thead><tr><th>Target</th><th>Waktu</th><th>Sumber</th></tr></thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tab-anomalies" class="tab-panel">
+      <div class="panel">
+        <h2>Anomaly Detection Report</h2>
+        <button id="refresh-anomalies" class="btn-secondary">Refresh</button>
+        <pre id="anomalies-output" class="result-box"></pre>
+      </div>
+    </section>
+
+    <section id="tab-users" class="tab-panel">
+      <div class="panel">
+        <h2>Manajemen User (Admin)</h2>
+        <table class="data-table">
+          <thead><tr><th>Username</th><th>Role</th><th>Last Login</th><th>Aktif</th></tr></thead>
+          <tbody id="users-body"></tbody>
+        </table>
+        <h3>Tambah User</h3>
+        <form id="create-user-form" class="inline-form">
+          <input type="text" id="new-username" placeholder="username" required>
+          <input type="password" id="new-password" placeholder="password" required>
+          <select id="new-role">
+            <option value="viewer">viewer</option>
+            <option value="operator">operator</option>
+            <option value="auditor">auditor</option>
+            <option value="admin">admin</option>
+          </select>
+          <button type="submit">Buat User</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>

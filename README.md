@@ -12,7 +12,20 @@ Aplikasi mendukung **pelacakan real-time** dengan:
 - ⚡ **Rate Limiting** - Proteksi dari API overload
 - 💰 **Caching** - Mengurangi API calls dengan smart caching
 
-📖 **[Baca Panduan Lengkap Real Tracking](REAL_TRACKING_GUIDE.md)**
+📖 **[Baca Panduan Lengkap Real Tracking](docs/REAL_TRACKING_GUIDE.md)**
+
+## 🖥️ Unified Monitoring Dashboard (Web)
+
+Selain CLI, tersedia **dashboard web terpadu** (REST API + UI) yang bisa diakses online via browser, dengan data tetap tersimpan offline di SQLite lokal:
+
+```bash
+pip install -r requirements.txt
+cp pegasus/config/api_config.example.py pegasus/config/api_config.py
+python run_dashboard.py
+# buka http://localhost:5000/dashboard (login: admin / admin123)
+```
+
+📖 **[Baca Panduan Lengkap Dashboard](docs/README_DASHBOARD.md)**
 
 ## 🚀 Fitur
 
@@ -49,7 +62,7 @@ Aplikasi mendukung **pelacakan real-time** dengan:
 14. **⚡ Mode Cepat** - Skip animasi untuk pencarian cepat
 15. **📄 Laporan Lengkap** - Generate report profesional
 
-📖 **Lihat dokumentasi lengkap di [NEW_FEATURES.md](NEW_FEATURES.md)**
+📖 **Lihat dokumentasi lengkap di [NEW_FEATURES.md](docs/NEW_FEATURES.md)**
 
 ## 📋 Persyaratan Sistem
 
@@ -125,29 +138,45 @@ File hasil export akan tersimpan di folder `exports/`
 
 ## 📁 Struktur Proyek
 
+Seluruh kode aplikasi ada di package `pegasus/`; file di root hanyalah entry point tipis (`main.py`, `run_dashboard.py`) agar perintah lama tetap berfungsi.
+
 ```
 pegasus-lacak-nomor/
-├── config/
-│   ├── settings.py           # Konfigurasi aplikasi
-│   ├── api_config.py         # Konfigurasi API (not in git)
-│   └── api_config.example.py # Template konfigurasi
-├── data/
-│   ├── local_database.db     # Database lokal (generated)
-│   └── sample_database.json  # Sample data untuk import
-├── utils/
-│   ├── helpers.py            # Fungsi-fungsi pembantu
-│   ├── api_client.py         # API & Database client
-│   └── database_manager.py   # Database management
-├── exports/                  # Folder untuk hasil export (auto-created)
-├── main.py                   # File utama program
-├── Pegasus-lacak-nomor.py    # DEPRECATED - shows message only
-├── batch_search.txt          # File input untuk batch search
-└── requirements.txt          # Daftar dependencies
+├── main.py                      # Entry point CLI (-> pegasus.main)
+├── run_dashboard.py             # Entry point web dashboard (-> pegasus.api.server)
+├── Pegasus-lacak-nomor.py       # DEPRECATED - shows message only
+├── batch_search.txt             # File input untuk batch search
+├── requirements.txt             # Daftar dependencies
+├── pegasus/                     # Package utama aplikasi
+│   ├── main.py                  # Logika menu CLI
+│   ├── config/
+│   │   ├── settings.py          # Konfigurasi aplikasi
+│   │   ├── api_config.py        # Konfigurasi API (not in git)
+│   │   └── api_config.example.py # Template konfigurasi
+│   ├── utils/
+│   │   ├── helpers.py           # Fungsi-fungsi pembantu
+│   │   ├── api_client.py        # API & Database client
+│   │   └── database_manager.py  # Database management
+│   ├── api/                     # REST API + web dashboard (Flask)
+│   │   ├── server.py
+│   │   ├── templates/dashboard.html
+│   │   └── static/dashboard.css, dashboard.js
+│   ├── analytics/                # Analytics dashboard (stats, trend, distribusi)
+│   ├── managers/, models/        # User management & RBAC
+│   ├── ml/                       # Anomaly detection
+│   ├── geo/                      # Analisis geospasial
+│   ├── reporting/                # Export & laporan profesional
+│   └── automation/               # Scheduler tugas otomatis
+├── data/                         # Penyimpanan offline (SQLite, auto-generated)
+│   └── sample_database.json      # Sample data untuk import
+├── exports/                      # Folder untuk hasil export (auto-created)
+├── docs/                         # Dokumentasi tambahan (panduan, changelog, dll)
+└── tests/                        # Test scripts
 ```
 
 ## 🔧 Konfigurasi
 
-File `config/settings.py` berisi pengaturan yang dapat disesuaikan:
+File `pegasus/config/settings.py` berisi pengaturan yang dapat disesuaikan:
 - Password aktivasi
 - Jumlah percobaan password maksimum
 - Pengaturan tampilan
@@ -189,7 +218,7 @@ Interface menu yang user-friendly:
 ## 📝 Catatan Penting
 
 - **Program memerlukan API atau Database untuk berfungsi**
-- **Simulation mode telah dihapus** - lihat [SIMULATION_REMOVED.md](SIMULATION_REMOVED.md)
+- **Simulation mode telah dihapus** - lihat [SIMULATION_REMOVED.md](docs/SIMULATION_REMOVED.md)
 - Data yang ditampilkan adalah data real dari API/Database
 - Jangan gunakan untuk tujuan ilegal
 - Pastikan penggunaan sesuai dengan peraturan yang berlaku
