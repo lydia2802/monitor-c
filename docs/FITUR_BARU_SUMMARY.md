@@ -1,8 +1,8 @@
-# Summary: 15 Fitur Baru Pegasus Lacak Nomor
+# Summary: 15 Fitur Baru Lacak Nomor
 
 ## 📋 Ringkasan Implementasi
 
-Telah berhasil menambahkan **15 fitur baru** ke aplikasi Pegasus Lacak Nomor, meningkatkan versi dari 2.0 ke 3.0.
+Telah berhasil menambahkan **15 fitur baru** ke aplikasi Lacak Nomor, meningkatkan versi dari 2.0 ke 3.0.
 
 ---
 

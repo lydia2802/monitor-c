@@ -68,7 +68,7 @@ class APIClient:
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Pegasus-Lacak-Nomor/3.0',
+            'User-Agent': 'LacakNomor/3.0',
             'Accept': 'application/json'
         })
         if API_KEYS.get('primary'):

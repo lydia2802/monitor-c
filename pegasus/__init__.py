@@ -1,1 +1,1 @@
-"""Pegasus Lacak Nomor - core application package."""
+"""Lacak Nomor - core application package."""

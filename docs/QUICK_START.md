@@ -1,4 +1,4 @@
-# Quick Start Guide - Pegasus Lacak Nomor v2.0
+# Quick Start Guide - Lacak Nomor v2.0
 
 ## 🚀 Quick Setup
 
@@ -67,7 +67,7 @@ After single search, choose export format:
 ## 📁 File Structure
 
 ```
-pegasus-lacak-nomor/
+lacak-nomor/
 ├── main.py              # ⭐ Main program (run this)
 ├── batch_search.txt     # 📝 Batch input (edit this)
 ├── exports/             # 💾 Export results (auto-created)

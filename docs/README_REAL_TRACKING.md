@@ -1,6 +1,6 @@
 # 🚀 Real Tracking - Getting Started
 
-## Welcome to Pegasus Lacak Nomor v3.0!
+## Welcome to Lacak Nomor v3.0!
 
 Aplikasi ini sekarang mendukung **3 mode operasi**:
 

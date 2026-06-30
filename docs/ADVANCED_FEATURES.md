@@ -1,6 +1,6 @@
-# Pegasus Lacak Nomor - Advanced Features
+# Lacak Nomor - Advanced Features
 
-This document describes the advanced features implemented in Pegasus Lacak Nomor v3.0.
+This document describes the advanced features implemented in Lacak Nomor v3.0.
 
 ## Table of Contents
 

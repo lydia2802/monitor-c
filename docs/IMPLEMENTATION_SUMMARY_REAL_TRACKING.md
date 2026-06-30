@@ -10,7 +10,7 @@
 
 ## 📋 Objective
 
-Mengubah Pegasus Lacak Nomor dari aplikasi simulasi murni menjadi aplikasi yang mendukung **real tracking** menggunakan API eksternal dan database lokal, sambil mempertahankan mode simulasi untuk backward compatibility.
+Mengubah Lacak Nomor dari aplikasi simulasi murni menjadi aplikasi yang mendukung **real tracking** menggunakan API eksternal dan database lokal, sambil mempertahankan mode simulasi untuk backward compatibility.
 
 ---
 
@@ -456,7 +456,7 @@ python main.py
 ```bash
 # Clone repo
 git clone <repo_url>
-cd pegasus-lacak-nomor
+cd lacak-nomor
 
 # Create virtual environment
 python -m venv .venv
@@ -597,7 +597,7 @@ python main.py
 
 ### What Was Achieved
 
-✅ **Successfully transformed** Pegasus Lacak Nomor dari aplikasi simulasi murni menjadi aplikasi yang mendukung **real tracking** menggunakan:
+✅ **Successfully transformed** Lacak Nomor dari aplikasi simulasi murni menjadi aplikasi yang mendukung **real tracking** menggunakan:
 - API eksternal untuk data real-time
 - Database lokal untuk data offline
 - Smart caching untuk performance

@@ -1,7 +1,7 @@
 """
-PEGASUS LACAK NOMOR - LEGACY VERSION (DEPRECATED)
+LACAK NOMOR - LEGACY VERSION (DEPRECATED)
 
-This is the legacy version (v1.0) of Pegasus Lacak Nomor.
+This is the legacy version (v1.0) of Lacak Nomor.
 This version has been DEPRECATED and should NOT be used.
 
 PLEASE USE: main.py instead

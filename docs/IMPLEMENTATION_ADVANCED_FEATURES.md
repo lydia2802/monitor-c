@@ -1,7 +1,7 @@
 # Implementation Summary: Advanced Features
 
 ## Overview
-This implementation adds 7 advanced recommendation features to Pegasus Lacak Nomor v3.0.
+This implementation adds 7 advanced recommendation features to Lacak Nomor v3.0.
 
 ## Features Implemented
 

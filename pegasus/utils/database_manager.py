@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database Manager for Pegasus Lacak Nomor
+Database Manager for Lacak Nomor
 Tool untuk mengelola database lokal (import, export, query)
 """
 
@@ -270,7 +270,7 @@ def clear_database():
 def show_menu():
     """Show database manager menu."""
     print(f"\n{Fore.CYAN}{'='*70}")
-    print("DATABASE MANAGER - Pegasus Lacak Nomor")
+    print("DATABASE MANAGER - Lacak Nomor")
     print(f"{'='*70}{Style.RESET_ALL}\n")
     print("1. Initialize Database")
     print("2. Import from JSON")

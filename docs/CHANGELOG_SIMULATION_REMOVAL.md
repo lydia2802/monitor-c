@@ -8,7 +8,7 @@
 
 ### Summary
 
-Simulation mode has been completely removed from Pegasus Lacak Nomor. The application now operates exclusively in Real Tracking Mode using API or local database.
+Simulation mode has been completely removed from Lacak Nomor. The application now operates exclusively in Real Tracking Mode using API or local database.
 
 ---
 
@@ -140,7 +140,7 @@ banner = """
 
 ### 📝 Changed Files
 
-#### `Pegasus-lacak-nomor.py` (Legacy)
+#### `lacak-nomor-legacy.py` (Legacy)
 **Before:**
 - Full implementation with simulation
 - 131 lines of functional code

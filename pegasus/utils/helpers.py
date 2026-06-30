@@ -66,7 +66,7 @@ def export_to_txt(data, filename):
     filepath = os.path.join(EXPORT_DIR, filename)
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write("=" * 50 + "\n")
-        f.write("PEGASUS LACAK NOMOR - HASIL PENCARIAN\n")
+        f.write("LACAK NOMOR - HASIL PENCARIAN\n")
         f.write("=" * 50 + "\n\n")
         for key, value in data.items():
             f.write(f"{key}: {value}\n")
@@ -204,7 +204,7 @@ def export_to_report(data, filename):
     filepath = os.path.join(EXPORT_DIR, filename)
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write("╔" + "═" * 70 + "╗\n")
-        f.write("║" + " " * 15 + "PEGASUS LACAK NOMOR - LAPORAN LENGKAP" + " " * 16 + "║\n")
+        f.write("║" + " " * 20 + "LACAK NOMOR - LAPORAN LENGKAP" + " " * 20 + "║\n")
         f.write("╚" + "═" * 70 + "╝\n\n")
         f.write(f"Generated: {format_timestamp()}\n\n")
         f.write("=" * 72 + "\n")

@@ -1,6 +1,6 @@
-# 15 Fitur Baru - Pegasus Lacak Nomor v3.0
+# 15 Fitur Baru - Lacak Nomor v3.0
 
-Berikut adalah 15 fitur baru yang telah ditambahkan ke aplikasi Pegasus Lacak Nomor:
+Berikut adalah 15 fitur baru yang telah ditambahkan ke aplikasi Lacak Nomor:
 
 ## 1. Pencarian Berdasarkan Nama (Search by Name)
 **Menu: 3**

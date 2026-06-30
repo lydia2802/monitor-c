@@ -1,4 +1,4 @@
-"""Entry point for the Pegasus Lacak Nomor CLI.
+"""Entry point for the Lacak Nomor CLI.
 
 The application code lives in the pegasus/ package; this thin wrapper keeps
 `python main.py` working from the repository root.

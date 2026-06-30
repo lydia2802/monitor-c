@@ -2,7 +2,7 @@
 
 ## Important Notice
 
-**Simulation mode has been completely removed from Pegasus Lacak Nomor v3.0.**
+**Simulation mode has been completely removed from Lacak Nomor v3.0.**
 
 This application now operates exclusively in **Real Tracking Mode** using:
 - External APIs
@@ -205,7 +205,7 @@ Example test data format (`test_data.json`):
 
 **A:** No. This is a design decision for data integrity. If you need test data, use a proper test database.
 
-### Q: What about the legacy Pegasus-lacak-nomor.py file?
+### Q: What about the legacy lacak-nomor-legacy.py file?
 
 **A:** It now shows a deprecation message only. Use `main.py` instead.
 

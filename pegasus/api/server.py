@@ -27,7 +27,7 @@ from pegasus.ml.anomaly_detector import AnomalyDetector
 
 
 class APIServer:
-    """REST API Server for Pegasus Lacak Nomor"""
+    """REST API Server for Lacak Nomor"""
     
     def __init__(self, host='0.0.0.0', port=5000, debug=False):
         self.host = host
@@ -472,7 +472,7 @@ class APIServer:
             return False
         
         display_host = '127.0.0.1' if self.host == '0.0.0.0' else self.host
-        print_colored(f"[*] Starting Pegasus Unified Dashboard Server...", "INFO")
+        print_colored(f"[*] Starting Unified Dashboard Server...", "INFO")
         print_colored(f"[*] Host: {self.host}:{self.port}", "INFO")
         print_colored(f"[*] Web Dashboard: http://{display_host}:{self.port}/dashboard", "SUCCESS")
         print_colored(f"[*] REST API Base: http://{display_host}:{self.port}/api/v1", "INFO")

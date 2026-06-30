@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-Dokumen ini berisi analisis mendalam dan rekomendasi **fitur AI-powered** dengan integrasi API eksternal yang dapat mengubah aplikasi **Pegasus Lacak Nomor** menjadi **intelligent tracking system** dengan capabilities modern berbasis Artificial Intelligence.
+Dokumen ini berisi analisis mendalam dan rekomendasi **fitur AI-powered** dengan integrasi API eksternal yang dapat mengubah aplikasi **Lacak Nomor** menjadi **intelligent tracking system** dengan capabilities modern berbasis Artificial Intelligence.
 
 ---
 
@@ -52,7 +52,7 @@ class NLPQueryProcessor:
         
         # Build prompt untuk GPT
         system_prompt = """
-        You are an AI assistant for a phone tracking system called Pegasus.
+        You are an AI assistant for a phone tracking system called Lacak Nomor.
         
         Your job is to interpret user queries and convert them to structured commands.
         
@@ -152,7 +152,7 @@ class NLPQueryProcessor:
         })
         
         system_prompt = """
-        You are Pegasus AI, an intelligent assistant for a phone tracking system.
+        You are Lacak Nomor AI, an intelligent assistant for a phone tracking system.
         
         Help users search for information, explain results, and answer questions about their search history.
         Be concise, helpful, and security-conscious.
@@ -203,7 +203,7 @@ def natural_language_search():
         return
     
     print_colored("\n╔════════════════════════════════════════════════════════════╗", "INFO")
-    print_colored("║          PEGASUS AI - NATURAL LANGUAGE SEARCH              ║", "SUCCESS")
+    print_colored("║          AI - NATURAL LANGUAGE SEARCH              ║", "SUCCESS")
     print_colored("╚════════════════════════════════════════════════════════════╝", "INFO")
     
     print(f"\n{Fore.CYAN}Examples:{Style.RESET_ALL}")
@@ -252,10 +252,10 @@ def ai_chat_mode():
         return
     
     print_colored("\n╔════════════════════════════════════════════════════════════╗", "INFO")
-    print_colored("║              PEGASUS AI - CHAT MODE                        ║", "SUCCESS")
+    print_colored("║              AI - CHAT MODE                        ║", "SUCCESS")
     print_colored("╚════════════════════════════════════════════════════════════╝", "INFO")
     
-    print(f"\n{Fore.CYAN}Chat dengan Pegasus AI. Ketik 'exit' untuk keluar.{Style.RESET_ALL}\n")
+    print(f"\n{Fore.CYAN}Chat dengan Lacak Nomor AI. Ketik 'exit' untuk keluar.{Style.RESET_ALL}\n")
     
     while True:
         user_input = input(f"{Fore.YELLOW}You: {Style.RESET_ALL}")
@@ -547,7 +547,7 @@ class FaceRecognition:
             aws_secret_access_key=aws_secret_key,
             region_name=region
         )
-        self.collection_id = 'pegasus-faces'
+        self.collection_id = 'lacaknomor-faces'
         self._ensure_collection()
     
     def _ensure_collection(self):
