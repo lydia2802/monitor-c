@@ -1,9 +1,5 @@
 # Application Settings
 
-# Password Configuration
-ACTIVATION_PASSWORD = "Sobri"
-MAX_PASSWORD_ATTEMPTS = 3
-
 # Display Settings
 PROGRESS_BAR_WIDTH = 75
 LOADING_ANIMATION_DURATION = 0.1

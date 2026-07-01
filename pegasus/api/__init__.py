@@ -1,4 +1,4 @@
 """
-API package for Pegasus Lacak Nomor
+API package
 Contains REST API server for external integrations
 """

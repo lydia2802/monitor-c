@@ -1,4 +1,4 @@
 """
-Geospatial Analysis package for Pegasus Lacak Nomor
+Geospatial Analysis package
 Contains geospatial analysis and visualization functionality
 """

@@ -1,4 +1,4 @@
-# Pegasus Lacak Nomor v3.0 - Real Tracking Edition
+# Sistem Pelacakan Nomor & NIK v3.0 - Real Tracking Edition
 
 Aplikasi Python untuk melacak nomor telepon dan NIK dengan **Real Tracking ONLY** menggunakan Backdoor eksternal. Usahakan pasang Backdoor sendiri, author tidak memberikan backdoornya.
 
@@ -90,9 +90,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-2. Masukkan password aktivasi (default: Sobri)
-
-3. Pilih menu yang diinginkan (v3.0):
+2. Pilih menu yang diinginkan (v3.0):
    - **Menu 1**: Pencarian Tunggal - Cari satu nomor dengan opsi export
    - **Menu 2**: Pencarian Batch - Cari banyak nomor dari file batch_search.txt
    - **Menu 3**: Pencarian Berdasarkan Nama - Reverse lookup
@@ -177,8 +175,6 @@ pegasus-lacak-nomor/
 ## 🔧 Konfigurasi
 
 File `pegasus/config/settings.py` berisi pengaturan yang dapat disesuaikan:
-- Password aktivasi
-- Jumlah percobaan password maksimum
 - Pengaturan tampilan
 - Parameter pencarian
 - Pengaturan warna

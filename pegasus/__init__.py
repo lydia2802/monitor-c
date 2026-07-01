@@ -1,1 +1,1 @@
-"""Pegasus Lacak Nomor - core application package."""
+"""Core application package for the phone/NIK tracking system."""

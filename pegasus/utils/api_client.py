@@ -5,10 +5,9 @@ Handles communication with external APIs for phone number and NIK lookup
 
 import requests
 import time
-import json
 import sqlite3
-from datetime import datetime, timedelta
-from typing import Dict, Optional, Any
+from datetime import datetime
+from typing import Dict, Optional
 from colorama import Fore, Style
 
 from pegasus.config.api_config import (
@@ -68,7 +67,7 @@ class APIClient:
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Pegasus-Lacak-Nomor/3.0',
+            'User-Agent': 'NomorNIK-Tracker/3.0',
             'Accept': 'application/json'
         })
         if API_KEYS.get('primary'):

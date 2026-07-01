@@ -1,5 +1,5 @@
 """
-Entry point for the Pegasus Unified Monitoring Dashboard.
+Entry point for the Unified Monitoring Dashboard.
 
 Starts the Flask REST API together with the web dashboard (served at /dashboard)
 on a single host/port. Search results are written to the local SQLite database
@@ -15,7 +15,7 @@ from pegasus.api.server import start_api_server
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run the Pegasus unified monitoring dashboard")
+    parser = argparse.ArgumentParser(description="Run the unified monitoring dashboard")
     parser.add_argument("--host", default="0.0.0.0", help="Bind address (default: 0.0.0.0)")
     parser.add_argument("--port", type=int, default=5000, help="Port to listen on (default: 5000)")
     parser.add_argument("--debug", action="store_true", help="Run Flask in debug/reload mode")

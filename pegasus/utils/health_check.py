@@ -6,7 +6,6 @@ Checks API availability and provides uptime statistics
 import requests
 import time
 from datetime import datetime
-from colorama import Fore, Style
 
 from pegasus.config.api_config import API_ENABLED, API_ENDPOINTS
 

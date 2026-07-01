@@ -4,13 +4,11 @@ Expose aplikasi functionality via REST API untuk integration dengan systems lain
 """
 
 import os
-import json
-from datetime import datetime, timedelta
-from functools import wraps
+from datetime import datetime
 
 # Try to import Flask
 try:
-    from flask import Flask, request, jsonify, make_response, render_template, redirect, url_for
+    from flask import Flask, request, jsonify, render_template, redirect, url_for
     from flask_cors import CORS
     FLASK_AVAILABLE = True
 except ImportError:
@@ -27,7 +25,7 @@ from pegasus.ml.anomaly_detector import AnomalyDetector
 
 
 class APIServer:
-    """REST API Server for Pegasus Lacak Nomor"""
+    """REST API Server for the phone/NIK tracking dashboard"""
     
     def __init__(self, host='0.0.0.0', port=5000, debug=False):
         self.host = host
@@ -226,8 +224,8 @@ class APIServer:
             
             from pegasus.utils.history_manager import HistoryManager
             history_manager = HistoryManager()
-            history = history_manager.get_all_history(limit=limit)
-            
+            history = history_manager.get_all_history(limit=limit + offset)[offset:]
+
             return jsonify({
                 'success': True,
                 'data': history,
@@ -472,7 +470,7 @@ class APIServer:
             return False
         
         display_host = '127.0.0.1' if self.host == '0.0.0.0' else self.host
-        print_colored(f"[*] Starting Pegasus Unified Dashboard Server...", "INFO")
+        print_colored("[*] Starting Unified Monitoring Dashboard Server...", "INFO")
         print_colored(f"[*] Host: {self.host}:{self.port}", "INFO")
         print_colored(f"[*] Web Dashboard: http://{display_host}:{self.port}/dashboard", "SUCCESS")
         print_colored(f"[*] REST API Base: http://{display_host}:{self.port}/api/v1", "INFO")

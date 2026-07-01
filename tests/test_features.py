@@ -81,16 +81,14 @@ except Exception as e:
 # Test history management
 print("\nTesting history management...")
 try:
-    import pegasus.main as main
-    main.search_history = []
-    
     test_result = {"Nama": "Test", "Kota": "Jakarta"}
     add_to_history("081234567890", test_result)
-    print(f"✓ add_to_history: {len(main.search_history)} items")
-    
-    stats = calculate_statistics(main.search_history)
+    current_history = history_manager.get_all_history()
+    print(f"✓ add_to_history: {len(current_history)} items")
+
+    stats = calculate_statistics(current_history)
     print(f"✓ calculate_statistics: {stats['total_searches']} searches")
-    
+
 except Exception as e:
     print(f"✗ History error: {e}")
     sys.exit(1)

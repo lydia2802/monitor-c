@@ -1,7 +1,7 @@
 """
-PEGASUS LACAK NOMOR - LEGACY VERSION (DEPRECATED)
+LEGACY VERSION (DEPRECATED)
 
-This is the legacy version (v1.0) of Pegasus Lacak Nomor.
+This is the legacy version (v1.0) of this application.
 This version has been DEPRECATED and should NOT be used.
 
 PLEASE USE: main.py instead
@@ -11,8 +11,6 @@ Only real tracking via API/Database is supported now.
 
 To use the current version:
     python main.py
-
-Created by: Letda Kes dr. Sobri
 """
 
 import sys

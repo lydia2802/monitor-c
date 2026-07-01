@@ -85,9 +85,7 @@ class GeospatialAnalyzer:
             'banjarnegara': (-7.4021, 109.6811),
             'purbalingga': (-7.3881, 109.3650),
             'banyumas': (-7.5158, 109.2942),
-            'cilacap': (-7.6984, 109.0235),
             'brebes': (-6.8703, 109.0500),
-            'tegal': (-6.8797, 109.1256),
             'pemalang': (-6.8878, 109.3806),
             'kendal': (-6.9194, 110.2506),
             'batang': (-6.9123, 109.7289),
@@ -110,15 +108,8 @@ class GeospatialAnalyzer:
             'pamekasan': (-7.1619, 113.4733),
             'sumenep': (-6.9254, 113.9066),
             'sidoarjo': (-7.4530, 112.7183),
-            'mojokerto': (-7.4707, 112.4407),
-            'jombang': (-7.5468, 112.2265),
-            'nganjuk': (-7.6029, 111.9014),
-            'madiun': (-7.6311, 111.5300),
-            'magetan': (-7.6497, 111.3380),
-            'ngawi': (-7.3899, 111.4619),
             'bojonegoro': (-7.1502, 111.8810),
             'tuban': (-6.8980, 112.0530),
-            'lamongan': (-7.1258, 112.4149),
         }
     
     def get_search_history_with_locations(self, limit=100):
@@ -238,7 +229,7 @@ class GeospatialAnalyzer:
         html = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Pegasus - Search Heatmap</title>
+    <title>Search Heatmap</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -291,14 +282,14 @@ class GeospatialAnalyzer:
         
         html += """
         markers.addTo(map);
-        
+
         // Add legend
         var legend = L.control({position: 'bottomright'});
-        legend.onAdd = function (map) {{
+        legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML = '<h4>Pegasus Search Heatmap</h4><p>""" + heatData.length + """ locations</p>';
+            div.innerHTML = '<h4>Search Heatmap</h4><p>' + heatData.length + ' locations</p>';
             return div;
-        }};
+        };
         legend.addTo(map);
     </script>
 </body>
@@ -339,7 +330,7 @@ class GeospatialAnalyzer:
         html = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Pegasus - Cluster Map</title>
+    <title>Cluster Map</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

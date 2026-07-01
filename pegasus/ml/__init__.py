@@ -1,4 +1,4 @@
 """
-Machine Learning package for Pegasus Lacak Nomor
+Machine Learning package
 Contains ML models for anomaly detection and pattern analysis
 """

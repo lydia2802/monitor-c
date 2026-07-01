@@ -4,10 +4,7 @@ Dashboard interaktif untuk monitoring search activities, API usage, dan trends s
 """
 
 import sqlite3
-import os
 from datetime import datetime, timedelta
-from collections import defaultdict
-import statistics
 
 from pegasus.utils.helpers import print_colored, clear_screen
 from colorama import Fore, Style
@@ -179,7 +176,7 @@ class AnalyticsDashboard:
         
         clear_screen()
         print_colored("╔════════════════════════════════════════════════════════════════════╗", "INFO")
-        print_colored("║              PEGASUS - REAL-TIME ANALYTICS DASHBOARD               ║", "SUCCESS")
+        print_colored("║                  REAL-TIME ANALYTICS DASHBOARD                    ║", "SUCCESS")
         print_colored("╚════════════════════════════════════════════════════════════════════╝", "INFO")
         
         print(f"\n{Fore.CYAN}📊 KEY METRICS (Last Hour){Style.RESET_ALL}")

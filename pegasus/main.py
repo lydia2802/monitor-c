@@ -1,26 +1,22 @@
+import os
 import sys
 import time
-import random
+from datetime import datetime
 from tqdm import tqdm
 from colorama import init, Fore, Style
 
 from pegasus.config.settings import (
-    ACTIVATION_PASSWORD, MAX_PASSWORD_ATTEMPTS,
     PROGRESS_BAR_WIDTH, LOADING_ANIMATION_DURATION,
-    LOADING_ANIMATION_ITERATIONS, VALID_PHONE_PREFIX,
-    NIK_LENGTH, MAX_HISTORY_ITEMS, BATCH_INPUT_FILE,
+    LOADING_ANIMATION_ITERATIONS, BATCH_INPUT_FILE,
     MAX_BATCH_SIZE, QUICK_SEARCH_MODE, MAX_FAVORITES,
     PHONE_OPERATORS
 )
-from pegasus.config.api_config import (
-    API_ENABLED, REQUIRE_CONSENT,
-    DATABASE_ENABLED, ENABLE_OPERATOR_CHECK
-)
+from pegasus.config.api_config import REQUIRE_CONSENT
 from pegasus.utils.helpers import (
-    clear_screen, print_colored, validate_input,
+    clear_screen, print_colored,
     format_timestamp, handle_exception, handle_keyboard_interrupt,
     export_to_json, export_to_csv, export_to_txt,
-    read_batch_file, calculate_statistics, detect_operator,
+    read_batch_file,
     calculate_age, calculate_distance, generate_email,
     generate_social_media, draw_ascii_chart, filter_history_by_date,
     filter_history_by_location, filter_history_by_gender, export_to_report
@@ -37,7 +33,7 @@ try:
     from pegasus.managers.user_manager import UserManager
     from pegasus.models.user import Permission
     USER_SYSTEM_AVAILABLE = True
-except ImportError as e:
+except ImportError:
     USER_SYSTEM_AVAILABLE = False
 
 try:
@@ -59,13 +55,13 @@ except ImportError:
     GEO_AVAILABLE = False
 
 try:
-    from pegasus.reporting.advanced_exporter import AdvancedExporter, generate_professional_report
+    from pegasus.reporting.advanced_exporter import generate_professional_report
     REPORTING_AVAILABLE = True
 except ImportError:
     REPORTING_AVAILABLE = False
 
 try:
-    from pegasus.automation.scheduler import TaskScheduler, get_scheduler, start_scheduler, stop_scheduler
+    from pegasus.automation.scheduler import get_scheduler, start_scheduler, stop_scheduler
     from pegasus.automation.scheduler import SCHEDULE_AVAILABLE
     AUTOMATION_AVAILABLE = True
 except ImportError:
@@ -95,8 +91,7 @@ def print_banner():
     """Print the application banner."""
     banner = f"""
     {Fore.CYAN}╔════════════════════════════════════════════════════════════════════════════╗
-    ║                         PEGASUS LACAK NOMOR v3.0                          ║
-    ║                     Created by: Letda Kes dr. Sobri                       ║
+    ║                       SISTEM PELACAKAN NOMOR & NIK v3.0                    ║
     ║                          REAL TRACKING SYSTEM                             ║
     ║                     {Fore.GREEN}[API & DATABASE ENABLED]{Fore.CYAN}                      ║
     ╚════════════════════════════════════════════════════════════════════════════╝{Style.RESET_ALL}
@@ -130,24 +125,6 @@ def print_consent_disclaimer():
         print_colored("\n[!] Anda tidak menyetujui disclaimer. Program dihentikan.", "ERROR")
         sys.exit(0)
     print()
-
-def check_password():
-    """Check activation password."""
-    attempts = 0
-    
-    while attempts < MAX_PASSWORD_ATTEMPTS:
-        password = input(f"\n{Fore.YELLOW}[!] Masukkan Password Aktivasi: {Style.RESET_ALL}")
-        if password == ACTIVATION_PASSWORD:
-            print_colored("[✓] Password benar!", "SUCCESS")
-            time.sleep(1)
-            return True
-        attempts += 1
-        if attempts < MAX_PASSWORD_ATTEMPTS:
-            print_colored(f"\n[!] Password salah! Sisa percobaan: {MAX_PASSWORD_ATTEMPTS - attempts}", "ERROR")
-        else:
-            print_colored("\n[!] Maksimal percobaan terlampaui. Program berhenti.", "ERROR")
-            sys.exit(1)
-    return False
 
 def loading_animation():
     """Show loading animation."""
@@ -281,7 +258,7 @@ def show_history():
         if entry['note']:
             print_colored(f"    Catatan: {entry['note']}", "WARNING")
         if entry['is_favorite']:
-            print_colored(f"    ⭐ FAVORIT", "SUCCESS")
+            print_colored("    ⭐ FAVORIT", "SUCCESS")
     
     print_colored(f"\n{'='*70}", "INFO")
     print_colored(f"Total: {len(search_history)} pencarian", "SUCCESS")
@@ -357,7 +334,7 @@ def batch_search():
         numbers = numbers[:MAX_BATCH_SIZE]
     
     print_colored(f"\n[INFO] Ditemukan {len(numbers)} nomor untuk dicari.", "INFO")
-    print_colored(f"[INFO] Mode: Real Tracking via API/Database", "SUCCESS")
+    print_colored("[INFO] Mode: Real Tracking via API/Database", "SUCCESS")
     
     time.sleep(1)
     
@@ -672,10 +649,11 @@ def toggle_quick_mode():
 
 def generate_detailed_report():
     """Generate detailed report for last search."""
+    search_history = history_manager.get_all_history()
     if not search_history:
         print_colored("\n[!] Belum ada pencarian.", "WARNING")
         return
-    
+
     last_search = search_history[-1]
     result = last_search['result'].copy()
     result['Target'] = last_search['target']
@@ -781,7 +759,7 @@ def login_screen():
         return True
     
     print_colored("\n╔═══════════════════════════════════════╗", "INFO")
-    print_colored("║         PEGASUS - USER LOGIN          ║", "SUCCESS")
+    print_colored("║              USER LOGIN               ║", "SUCCESS")
     print_colored("╚═══════════════════════════════════════╝", "INFO")
     
     username = input(f"\n{Fore.YELLOW}Username: {Style.RESET_ALL}")
@@ -867,7 +845,7 @@ def user_management_menu():
                 username = input(f"{Fore.YELLOW}Username: {Style.RESET_ALL}")
                 new_password = input(f"{Fore.YELLOW}New password: {Style.RESET_ALL}")
                 user_manager.change_password(username, new_password)
-                print_colored(f"\n[✓] Password changed!", "SUCCESS")
+                print_colored("\n[✓] Password changed!", "SUCCESS")
             except Exception as e:
                 print_colored(f"\n[!] Error: {str(e)}", "ERROR")
         
@@ -1236,11 +1214,7 @@ def main():
     """Main program loop."""
     clear_screen()
     print_banner()
-    
-    # Check password first
-    if not check_password():
-        return
-    
+
     # Login screen for multi-user system
     if USER_SYSTEM_AVAILABLE:
         if not login_screen():
@@ -1323,7 +1297,7 @@ def main():
     if AUTOMATION_AVAILABLE:
         stop_scheduler()
     
-    print_colored("\n[!] Terima kasih telah menggunakan Pegasus Lacak Nomor!", "SUCCESS")
+    print_colored("\n[!] Terima kasih telah menggunakan Sistem Pelacakan Nomor & NIK!", "SUCCESS")
     time.sleep(2)
 
 if __name__ == "__main__":

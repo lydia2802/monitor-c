@@ -1,4 +1,4 @@
 """
-Automation package for Pegasus Lacak Nomor
+Automation package
 Contains scheduled tasks and automation functionality
 """
